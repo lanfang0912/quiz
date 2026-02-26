@@ -376,10 +376,10 @@ footer{text-align:center;padding:40px 24px;
 const CONFIG = {
   // Kit Form UIDs — 每種類型對應不同 Form
   kitForms: {
-    doubt:      'fa257dcd7d', // 🌊 自我懷疑型
-    lost:       '80fc25c58f', // 🧭 方向迷失型
-    wrongForce: '58c792a87f', // ⚡ 用錯力型
-    support:    '289cde9730', // 🤝 缺乏支持型
+    doubt:      '9136980', // 🌊 自我懷疑型
+    lost:       '9136991', // 🧭 方向迷失型
+    wrongForce: '9136994', // ⚡ 用錯力型
+    support:    '9136995', // 🤝 缺乏支持型
   },
 
   // 30分鐘諮詢預約連結
@@ -494,10 +494,11 @@ function submitEmail() {
   const type = getType();
   const t = TYPES[type];
 
-  // ── Kit API v3 — 最穩定的方式 ──────────────────
-  const kitFormUid = CONFIG.kitForms[type];
+  // ── Kit API v3 — 數字 Form ID 版本 ──────────────
+  const kitFormIds = CONFIG.kitForms;
+  const kitFormId = kitFormIds[type];
   const kitApiKey = 'SXNVVdwrZCttf6ZjiuEOJg';
-  const kitUrl = `https://api.convertkit.com/v3/forms/${kitFormUid}/subscribe`;
+  const kitUrl = `https://api.convertkit.com/v3/forms/${kitFormId}/subscribe`;
 
   fetch(kitUrl, {
     method: 'POST',
@@ -507,14 +508,7 @@ function submitEmail() {
       email: email,
       first_name: name,
     }),
-  })
-  .then(res => res.json())
-  .then(data => {
-    alert('Kit 回應：' + JSON.stringify(data));
-  })
-  .catch(err => {
-    alert('送出失敗：' + err.message + ' / ' + err);
-  });
+  }).catch(() => {});
 
   setTimeout(() => showResult(name, email, type), 800);
 }
