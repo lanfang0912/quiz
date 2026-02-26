@@ -374,11 +374,15 @@ footer{text-align:center;padding:40px 24px;
    ⚙️  設定區 — 只有 bookingUrl 需要換
 ──────────────────────────────────────────────*/
 const CONFIG = {
-  // Kit Form UID（已設定好）
-  kitFormUid: '9b59be4f37',
-  kitSubdomain: 'yourland',
+  // Kit Form UIDs — 每種類型對應不同 Form
+  kitForms: {
+    doubt:      'fa257dcd7d', // 🌊 自我懷疑型
+    lost:       '80fc25c58f', // 🧭 方向迷失型
+    wrongForce: '58c792a87f', // ⚡ 用錯力型
+    support:    '289cde9730', // 🤝 缺乏支持型
+  },
 
-  // 30分鐘諮詢預約連結（換成你的 Calendly 或 Line 連結）
+  // 30分鐘諮詢預約連結
   bookingUrl: 'https://calendar.app.google/89QzXcHrP7sdTVvi7',
   bookingText: '預約 30 分鐘免費諮詢 →',
 };
@@ -490,23 +494,20 @@ function submitEmail() {
   const type = getType();
   const t = TYPES[type];
 
-  // ── Kit Form POST ──────────────────────────────
-  // Kit 允許直接從前端 POST，不需要後端
-  const kitUrl = `https://app.convertkit.com/forms/${CONFIG.kitFormUid}/subscriptions`;
+  // ── Kit Form POST — 依類型送到對應 Form ──────────
+  const kitFormUid = CONFIG.kitForms[type];
+  const kitUrl = `https://app.convertkit.com/forms/${kitFormUid}/subscriptions`;
 
   const formData = new FormData();
   formData.append('email_address', email);
   formData.append('first_name', name);
-  // 傳測驗類型到 Kit（Kit 的 fields 格式）
-  formData.append('fields[quiz_type]', t.badge);
 
   fetch(kitUrl, {
     method: 'POST',
     body: formData,
-    mode: 'no-cors', // Kit 需要 no-cors，會靜默成功
-  }).catch(() => {}); // 靜默錯誤，不影響使用者體驗
+    mode: 'no-cors',
+  }).catch(() => {});
 
-  // 不等 API 回應，直接顯示結果（no-cors 無法讀取 response）
   setTimeout(() => showResult(name, email, type), 800);
 }
 
