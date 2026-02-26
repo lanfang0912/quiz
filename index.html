@@ -494,19 +494,40 @@ function submitEmail() {
   const type = getType();
   const t = TYPES[type];
 
-  // ── Kit Form POST — 依類型送到對應 Form ──────────
+  // ── Kit Form POST — 用隱藏 iframe + form 最穩定 ──
   const kitFormUid = CONFIG.kitForms[type];
   const kitUrl = `https://app.convertkit.com/forms/${kitFormUid}/subscriptions`;
 
-  const formData = new FormData();
-  formData.append('email_address', email);
-  formData.append('first_name', name);
+  let iframe = document.getElementById("kit-iframe");
+  if (!iframe) {
+    iframe = document.createElement("iframe");
+    iframe.id = "kit-iframe";
+    iframe.name = "kit-iframe";
+    iframe.style.display = "none";
+    document.body.appendChild(iframe);
+  }
 
-  fetch(kitUrl, {
-    method: 'POST',
-    body: formData,
-    mode: 'no-cors',
-  }).catch(() => {});
+  let form = document.getElementById("kit-hidden-form");
+  if (form) form.remove();
+  form = document.createElement("form");
+  form.id = "kit-hidden-form";
+  form.action = kitUrl;
+  form.method = "POST";
+  form.target = "kit-iframe";
+
+  const addField = (n, v) => {
+    const input = document.createElement("input");
+    input.type = "hidden";
+    input.name = n;
+    input.value = v;
+    form.appendChild(input);
+  };
+
+  addField("email_address", email);
+  addField("first_name", name);
+
+  document.body.appendChild(form);
+  form.submit();
 
   setTimeout(() => showResult(name, email, type), 800);
 }
