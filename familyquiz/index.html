@@ -1,1 +1,934 @@
 
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>你家的支持系統，現在是哪種狀態？</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FAF7F2;
+    --warm-white: #FDF9F4;
+    --brown-deep: #2C1F14;
+    --brown-mid: #5C3D2E;
+    --brown-light: #A0745A;
+    --terracotta: #C4622D;
+    --terracotta-light: #E8907A;
+    --sage: #7A8C7E;
+    --gold: #C9A84C;
+    --border: #E8DDD4;
+    --shadow: rgba(44, 31, 20, 0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background-color: var(--cream);
+    color: var(--brown-deep);
+    font-family: 'Noto Sans TC', sans-serif;
+    font-weight: 300;
+    line-height: 1.8;
+    min-height: 100vh;
+  }
+
+  /* HERO */
+  .hero {
+    background: var(--warm-white);
+    border-bottom: 1px solid var(--border);
+    padding: 80px 24px 72px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(196,98,45,0.07) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; left: -40px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .hero-eyebrow {
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    color: var(--terracotta);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+
+  .hero h1 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: clamp(26px, 5vw, 44px);
+    font-weight: 700;
+    line-height: 1.4;
+    color: var(--brown-deep);
+    max-width: 680px;
+    margin: 0 auto 24px;
+  }
+
+  .hero h1 span {
+    color: var(--terracotta);
+  }
+
+  .hero-sub {
+    font-size: 15px;
+    color: var(--brown-light);
+    max-width: 480px;
+    margin: 0 auto 40px;
+    line-height: 1.9;
+  }
+
+  .hero-meta {
+    display: inline-flex;
+    gap: 24px;
+    font-size: 12px;
+    color: var(--brown-light);
+    letter-spacing: 0.05em;
+  }
+
+  .hero-meta span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* QUIZ CONTAINER */
+  .container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* PROGRESS */
+  .progress-wrap {
+    padding: 32px 0 0;
+    display: none;
+  }
+
+  .progress-wrap.visible { display: block; }
+
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--brown-light);
+    margin-bottom: 8px;
+    letter-spacing: 0.05em;
+  }
+
+  .progress-bar {
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--terracotta);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+
+  /* START BUTTON */
+  .start-section {
+    padding: 48px 0 0;
+    text-align: center;
+  }
+
+  .btn-start {
+    display: inline-block;
+    background: var(--terracotta);
+    color: white;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    padding: 18px 48px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-start::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0);
+    transition: background 0.25s;
+  }
+
+  .btn-start:hover {
+    background: var(--brown-mid);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(196,98,45,0.25);
+  }
+
+  .start-note {
+    font-size: 12px;
+    color: var(--brown-light);
+    margin-top: 16px;
+    letter-spacing: 0.03em;
+  }
+
+  /* QUESTION CARD */
+  .question-section {
+    display: none;
+    padding-top: 40px;
+    animation: fadeUp 0.4s ease forwards;
+  }
+
+  .question-section.active { display: block; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .q-number {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    color: var(--terracotta);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .q-text {
+    font-family: 'Noto Serif TC', serif;
+    font-size: clamp(17px, 3vw, 22px);
+    font-weight: 600;
+    line-height: 1.6;
+    color: var(--brown-deep);
+    margin-bottom: 32px;
+  }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .option {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 20px 24px;
+    background: var(--warm-white);
+    border: 1.5px solid var(--border);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+  }
+
+  .option:hover {
+    border-color: var(--terracotta-light);
+    background: #FFF8F5;
+    transform: translateX(4px);
+  }
+
+  .option.selected {
+    border-color: var(--terracotta);
+    background: #FFF3EE;
+  }
+
+  .option.selected::after {
+    content: '✓';
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--terracotta);
+    font-size: 14px;
+  }
+
+  .option-radio {
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid var(--border);
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 2px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .option.selected .option-radio {
+    border-color: var(--terracotta);
+    background: var(--terracotta);
+  }
+
+  .option.selected .option-radio::after {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: white;
+    border-radius: 50%;
+  }
+
+  .option-text {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--brown-mid);
+  }
+
+  .q-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+  }
+
+  .btn-back {
+    font-size: 13px;
+    color: var(--brown-light);
+    background: none;
+    border: none;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    padding: 8px 0;
+    transition: color 0.2s;
+  }
+
+  .btn-back:hover { color: var(--brown-mid); }
+
+  .btn-next {
+    background: var(--brown-deep);
+    color: white;
+    border: none;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    padding: 14px 32px;
+    cursor: pointer;
+    transition: all 0.2s;
+    opacity: 0.4;
+    pointer-events: none;
+  }
+
+  .btn-next.enabled {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .btn-next.enabled:hover {
+    background: var(--terracotta);
+    transform: translateY(-1px);
+  }
+
+  /* RESULT */
+  .result-section {
+    display: none;
+    padding-top: 48px;
+    animation: fadeUp 0.5s ease forwards;
+  }
+
+  .result-section.active { display: block; }
+
+  .result-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 20px;
+    margin-bottom: 28px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+  }
+
+  .result-badge.alarm {
+    background: #FFF0EB;
+    color: var(--terracotta);
+    border: 1px solid #F4C4B4;
+  }
+
+  .result-badge.solo {
+    background: #FFF9EC;
+    color: #A07820;
+    border: 1px solid #EDD890;
+  }
+
+  .result-badge.silent {
+    background: #F2F5F2;
+    color: var(--sage);
+    border: 1px solid #C4D0C6;
+  }
+
+  .result-title {
+    font-family: 'Noto Serif TC', serif;
+    font-size: clamp(22px, 4vw, 34px);
+    font-weight: 700;
+    line-height: 1.4;
+    color: var(--brown-deep);
+    margin-bottom: 8px;
+  }
+
+  .result-subtitle {
+    font-size: 14px;
+    color: var(--brown-light);
+    margin-bottom: 32px;
+    letter-spacing: 0.03em;
+  }
+
+  .result-body {
+    background: var(--warm-white);
+    border: 1px solid var(--border);
+    padding: 32px;
+    margin-bottom: 24px;
+  }
+
+  .result-body p {
+    font-size: 14px;
+    line-height: 1.95;
+    color: var(--brown-mid);
+    margin-bottom: 16px;
+  }
+
+  .result-body p:last-child { margin-bottom: 0; }
+
+  .result-highlight {
+    border-left: 3px solid var(--terracotta);
+    padding-left: 20px;
+    margin: 24px 0;
+    font-family: 'Noto Serif TC', serif;
+    font-size: 15px;
+    color: var(--brown-deep);
+    line-height: 1.8;
+  }
+
+  /* KIT 表單區塊設計 */
+  .kit-embed-wrapper {
+    background: var(--warm-white);
+    border: 1.5px dashed var(--terracotta-light);
+    padding: 32px 24px 24px;
+    margin-bottom: 32px;
+    text-align: center;
+    border-radius: 4px;
+  }
+
+  .kit-embed-wrapper h4 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--brown-deep);
+    margin-bottom: 8px;
+  }
+
+  .kit-embed-wrapper p {
+    font-size: 13px;
+    color: var(--brown-mid);
+    margin-bottom: 20px;
+    line-height: 1.8;
+  }
+
+  .result-cta-box {
+    background: var(--brown-deep);
+    color: white;
+    padding: 40px 32px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .result-cta-box::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 150px; height: 150px;
+    background: radial-gradient(circle, rgba(196,98,45,0.2) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .result-cta-box h3 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+
+  .result-cta-box p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 28px;
+    line-height: 1.8;
+  }
+
+  .btn-cta {
+    display: inline-block;
+    background: var(--terracotta);
+    color: white;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    padding: 16px 40px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.25s ease;
+  }
+
+  .btn-cta:hover {
+    background: var(--terracotta-light);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(196,98,45,0.35);
+  }
+
+  /* DIVIDER */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 40px 0;
+  }
+
+  /* ABOUT */
+  .about-strip {
+    padding: 40px 0;
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+  }
+
+  .about-avatar {
+    width: 56px;
+    height: 56px;
+    background: var(--border);
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Noto Serif TC', serif;
+    font-size: 20px;
+    color: var(--brown-light);
+  }
+
+  .about-text {
+    font-size: 13px;
+    color: var(--brown-mid);
+    line-height: 1.85;
+  }
+
+  .about-name {
+    font-weight: 500;
+    color: var(--brown-deep);
+    margin-bottom: 6px;
+    font-size: 14px;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 24px;
+    text-align: center;
+    font-size: 11px;
+    color: var(--brown-light);
+    letter-spacing: 0.05em;
+  }
+
+  /* MOBILE */
+  @media (max-width: 480px) {
+    .hero { padding: 60px 20px 56px; }
+    .result-body { padding: 24px 20px; }
+    .kit-embed-wrapper { padding: 24px 16px; }
+    .result-cta-box { padding: 32px 20px; }
+    .about-strip { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <p class="hero-eyebrow">家庭支持系統自我檢測</p>
+  <h1>你家現在的狀態，<br><span>是哪一種漏風？</span></h1>
+  <p class="hero-sub">8 個問題，幫你看見那個大家都感覺到、<br>但說不清楚的地方在哪裡。</p>
+  <div class="hero-meta">
+    <span>⏱ 約 3 分鐘</span>
+    <span>✦ 8 題</span>
+    <span>✉ 結果寄到信箱</span>
+  </div>
+</section>
+
+<div class="container">
+
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-label">
+      <span id="progressText">第 1 題，共 8 題</span>
+      <span id="progressPct">0%</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+  </div>
+
+  <div class="start-section" id="startSection">
+    <button class="btn-start" onclick="startQuiz()">開始測驗 →</button>
+    <p class="start-note">填完後，個人化結果與清單會送到你的信箱</p>
+  </div>
+
+  <div class="question-section" id="q1">
+    <p class="q-number">題目 01 / 08</p>
+    <p class="q-text">孩子遇到麻煩或怪怪的事，他第一個反應通常是？</p>
+    <div class="options">
+      <div class="option" onclick="selectOption(this, 'q1', 'alarm')">
+        <div class="option-radio"></div>
+        <span class="option-text">最近行為有點怪，但他不說，我也不確定發生什麼</span>
+      </div>
+      <div class="option" onclick="selectOption(this, 'q1', 'solo')">
+        <div class="option-radio"></div>
+        <span class="option-text">會找我，但說了一半就停下來，感覺說完也沒用</span>
+      </div>
+      <div class="option" onclick="selectOption(this, 'q1', 'silent')">
+        <div class="option-radio"></div>
+        <span class="option-text">自己處理，不太說，我也不確定他有沒有在求救</span>
+      </div>
+    </div>
+    <div class="q-nav">
+      <button class="btn-back" onclick="goBack(1)" style="visibility:hidden">← 上一題</button>
+      <button class="btn-next" id="next-q1" onclick="goNext(1)">下一題 →</button>
+    </div>
+  </div>
+
+  <div class="question-section" id="q2">
+    <p class="q-number">題目 02 / 08</p>
+    <p class="q-text">家裡出了狀況，你和另一半的第一反應通常是？</p>
+    <div class="options">
+      <div class="option" onclick="selectOption(this, 'q2', 'solo')">
+        <div class="option-radio"></div>
+        <span class="option-text">我先扛起來，另一半退到旁邊，最後還是我去收尾</span>
+      </div>
+      <div class="option" onclick="selectOption(this, 'q2', 'alarm')">
+        <div class="option-radio"></div>
+        <span class="option-text">兩個人先找是誰的錯，把問題推給孩子或對方</span>
+      </div>
+      <div class="option" onclick="selectOption(this, 'q2', 'silent')">
+        <div class="option-radio"></div>
+        <span class="option-text">乾脆不說，怕一開口就變吵架，算了過去就算了</span>
+      </div>
+    </div>
+    <div class="q-nav">
+      <button class="btn-back" onclick="goBack(2)">← 上一題</button>
+      <button class="btn-next" id="next-q2" onclick="goNext(2)">下一題 →</button>
+    </div>
+  </div>
+
+  <div class="question-section" id="q3">
+    <p class="q-number">題目 03 / 08</p>
+    <p class="q-text">你上一次跟另一半說出「我覺得我們這樣下去不對」，大約是什麼時候？</p>
+    <div class="options">
+      <div class="option" onclick="selectOption(this, 'q3', 'solo')">
+        <div class="option-radio"></div>
+        <span class="option-text">說過，但對方沒有回應，或把話題帶走了</span>
+      </div>
+      <div class="option" onclick="selectOption(this, 'q3', 'alarm')">
+        <div class="option-radio"></div>
+        <span class="option-text">說過，但變成一場爭吵，最後什麼都沒解決</span>
+      </div>
+      <div class="option" onclick="selectOption(this, 'q3', 'silent')">
+        <div class="option-radio"></div>
+        <span class="option-text">很久沒說了，或根本想不起來上次是什麼時候</span>
+      </div>
+    </div>
+    <div class="q-nav">
+      <button class="btn-back" onclick="goBack(3)">← 上一題</button>
+      <button class="btn-next" id="next-q3" onclick="goNext(3)">下一題 →</button>
+    </div>
+  </div>
+
+  <div class="question-section" id="q4">
+    <p class="q-number">題目 04 / 08</p>
+    <p class="q-text">家裡的情緒通常怎麼消化？</p>
+    <div class="options">
+      <div class="option" onclick="selectOption(this, 'q4', 'silent')">
+        <div class="option-radio"></div>
+        <span class="option-text">被消音，沒有人說，時間到了就過去了</span>
+      </div>
+      <div class="option" onclick="selectOption(this, 'q4', 'solo')">
+        <div class="option-radio"></div>
+        <span class="option-text">我一個人默默消化，不想讓家人覺得我在抱怨</span>
+      </div>
+      <div class="option" onclick="selectOption(this, 'q4', 'alarm')">
+        <div class="option-radio"></div>
+        <span class="option-text">偶爾會爆出來，爆完之後修復很慢，又繞回原點</span>
+      </div>
+    </div>
+    <div class="q-nav">
+      <button class="btn-back" onclick="goBack(4)">← 上一題</button>
+      <button class="btn-next" id="next-q4" onclick="goNext(4)">下一題 →</button>
+    </div>
+  </div>
+
+  <div class="question-section" id="q5">
+    <p class="q-number">題目 05 / 08</p>
+    <p class="q-text">當你覺得很累、需要有人支持，你通常怎麼辦？</p>
+    <div class="options">
+      <div class="option" onclick="selectOption(this, 'q5', 'solo')">
+        <div class="option-radio"></div>
+        <span class="option-text">自己撐過去，不習慣說出來，說了也不知道誰能接</span>
+      </div>
+      <div class="option" onclick="selectOption(this, 'q5', 'silent')">
+        <div class="option-radio"></div>
+        <span class="option-text">找外面的朋友說，不在家裡說，怕造成更多麻煩</span>
+      </div>
+      <div class="option" onclick="selectOption(this, 'q5', 'alarm')">
+        <div class="option-radio"></div>
+        <span class="option-text">說了，但對方接不住，最後還是要我自己去解決</span>
+      </div>
+    </div>
+    <div class="q-nav">
+      <button class="btn-back" onclick="goBack(5)">← 上一題</button>
+      <button class="btn-next" id="next-q5" onclick="goNext(5)">下一題 →</button>
+    </div>
+  </div>
+
+  <div class="question-section" id="q6">
+    <p class="q-number">題目 06 / 08</p>
+    <p class="q-text">家裡出了問題，責任通常怎麼分配？</p>
+    <div class="options">
+      <div class="option" onclick="selectOption(this, 'q6', 'alarm')">
+        <div class="option-radio"></div>
+        <span class="option-text">有一個人（通常是孩子）變成「被說是原因」的那個</span>
+      </div>
+      <div class="option" onclick="selectOption(this, 'q6', 'solo')">
+        <div class="option-radio"></div>
+        <span class="option-text">有人默默去收尾，但沒有人問他為什麼要一個人扛</span>
+      </div>
+      <div class="option" onclick="selectOption(this, 'q6', 'silent')">
+        <div class="option-radio"></div>
+        <span class="option-text">大家都覺得不是自己的問題，最後沒有人承擔</span>
+      </div>
+    </div>
+    <div class="q-nav">
+      <button class="btn-back" onclick="goBack(6)">← 上一題</button>
+      <button class="btn-next" id="next-q6" onclick="goNext(6)">下一題 →</button>
+    </div>
+  </div>
+
+  <div class="question-section" id="q7">
+    <p class="q-number">題目 07 / 08</p>
+    <p class="q-text">你有沒有一種感覺：家裡有什麼卡住了，但你說不清楚在哪裡？</p>
+    <div class="options">
+      <div class="option" onclick="selectOption(this, 'q7', 'alarm')">
+        <div class="option-radio"></div>
+        <span class="option-text">有，而且已經發生具體的事，我開始擔心下一次</span>
+      </div>
+      <div class="option" onclick="selectOption(this, 'q7', 'solo')">
+        <div class="option-radio"></div>
+        <span class="option-text">有，我能感覺到，但說出來對方會覺得我在找麻煩</span>
+      </div>
+      <div class="option" onclick="selectOption(this, 'q7', 'silent')">
+        <div class="option-radio"></div>
+        <span class="option-text">有一點，但大家都沒有提，就當作沒事繼續過</span>
+      </div>
+    </div>
+    <div class="q-nav">
+      <button class="btn-back" onclick="goBack(7)">← 上一題</button>
+      <button class="btn-next" id="next-q7" onclick="goNext(7)">下一題 →</button>
+    </div>
+  </div>
+
+  <div class="question-section" id="q8">
+    <p class="q-number">題目 08 / 08</p>
+    <p class="q-text">你現在最想改變的是什麼？</p>
+    <div class="options">
+      <div class="option" onclick="selectOption(this, 'q8', 'alarm')">
+        <div class="option-radio"></div>
+        <span class="option-text">讓孩子下次遇到事情，第一個反應是回家來找我</span>
+      </div>
+      <div class="option" onclick="selectOption(this, 'q8', 'solo')">
+        <div class="option-radio"></div>
+        <span class="option-text">讓我不要再一個人扛，另一半能真正參與進來</span>
+      </div>
+      <div class="option" onclick="selectOption(this, 'q8', 'silent')">
+        <div class="option-radio"></div>
+        <span class="option-text">讓大人之間能說真話，而不是只剩沉默和指令</span>
+      </div>
+    </div>
+    <div class="q-nav">
+      <button class="btn-back" onclick="goBack(8)">← 上一題</button>
+      <button class="btn-next" id="next-q8" onclick="showResult()">看我的結果 →</button>
+    </div>
+  </div>
+
+  <div class="result-section" id="result-alarm">
+    <div class="result-badge alarm">🔴 &nbsp;警報型</div>
+    <p class="result-title">你家的警報器<br>已經在響了</p>
+    <p class="result-subtitle">孩子正在用行為替你說一件你還沒看清楚的事</p>
+
+    <div class="result-body">
+      <p>你答題的方向顯示：家裡不只是「哪裡漏風」，而是訊號已經出現了。孩子的行為、那些讓你「覺得怪怪的」時刻，都不是偶然——它們是系統在說話。</p>
+      <div class="result-highlight">「孩子的問題，常常是家庭系統的警報器。警報響了，修的不應該只是孩子，而是把堵住的管道找出來。」</div>
+      <p>最危險的不是問題本身，而是等到下一次爆炸才發現：中間明明有那麼多可以停下來的地方。</p>
+      <p>你現在最需要的，不是一套說話技巧，而是有人幫你從外面把這張圖看清楚：哪裡卡住了，下一步先動哪裡。</p>
+    </div>
+
+    <div class="kit-embed-wrapper">
+      <h4>📥 獲取急救工具：1 分鐘回到自己</h4>
+      <p>知道了自己是警報型，然後呢？面對孩子的狀況，你不需要立刻逼自己完美，你需要的是一個救急工具。<br><br>輸入 Email，我立刻把這份專屬的<strong>【1 分鐘回到自己】文字練習</strong>寄給你。這是一個當你覺得快被焦慮淹沒時，能馬上拿出來安定自己的指南。</p>
+      <iframe src="https://yourland.kit.com/6090e6286d" width="100%" height="250" style="border:none; overflow:hidden;" scrolling="no"></iframe>
+    </div>
+
+    <div class="result-cta-box">
+      <h3>預約一次 15 分鐘的通話</h3>
+      <p>不用事先想好要說什麼。<br>你只需要把讓你覺得「怪怪的」那件事帶過來，<br>我來幫你把輪廓看清楚。</p>
+      <a href="https://calendar.app.google/ZjhDS3DB97kbdhgt9" target="_blank" class="btn-cta">預約免費 15 分鐘 →</a>
+    </div>
+  </div>
+
+  <div class="result-section" id="result-solo">
+    <div class="result-badge solo">🟡 &nbsp;孤軍型</div>
+    <p class="result-title">你一個人<br>開著所有的燈</p>
+    <p class="result-subtitle">你在扛，但另一半的那條線，已經斷掉一段時間了</p>
+
+    <div class="result-body">
+      <p>你答題的方向顯示：家裡不是沒有人在乎，而是只剩你一個人在動。你知道哪裡漏風，你也知道孩子需要什麼——但你需要有人接住你，才能繼續接住他。</p>
+      <div class="result-highlight">「一個全靠一個人在撐的家，最後會把那個人撐到退場。退場一次，孩子就更孤單一次。」</div>
+      <p>長期獨力支撐最大的代價不是累，而是：你漸漸習慣一個人收尾，另一半漸漸習慣等你收尾，孩子漸漸學會只找你——然後有天你也接不住了。</p>
+      <p>你現在需要的，不是「怎麼讓對方改變」的說話術，而是先從外面看清楚這個循環從哪裡開始，然後找到一個你能踩下去的點。</p>
+    </div>
+
+    <div class="kit-embed-wrapper">
+      <h4>📥 獲取急救工具：1 分鐘回到自己</h4>
+      <p>知道了自己是孤軍型，然後呢？當你覺得「又只剩我在撐」時，你不需要立刻逼自己完美，你需要的是一個救急工具。<br><br>輸入 Email，我立刻把這份專屬的<strong>【1 分鐘回到自己】文字練習</strong>寄給你。這是一個當你快被壓力淹沒時，能馬上拿出來安定自己的指南。</p>
+      <iframe src="https://yourland.kit.com/a128ff9f41" width="100%" height="250" style="border:none; overflow:hidden;" scrolling="no"></iframe>
+    </div>
+
+    <div class="result-cta-box">
+      <h3>預約一次 15 分鐘的通話</h3>
+      <p>你不需要事先把問題整理清楚。<br>帶著現在最重的那一句話來就可以，<br>我來幫你把它放在對的位置上。</p>
+      <a href="https://calendar.app.google/ZjhDS3DB97kbdhgt9" target="_blank" class="btn-cta">預約免費 15 分鐘 →</a>
+    </div>
+  </div>
+
+  <div class="result-section" id="result-silent">
+    <div class="result-badge silent">⚪ &nbsp;悶蓋型</div>
+    <p class="result-title">表面還好，<br>但管道已經被蓋住很久了</p>
+    <p class="result-subtitle">沒有爆炸，不代表沒有漏風——只是還沒到臨界點</p>
+
+    <div class="result-body">
+      <p>你答題的方向顯示：家裡沒有明顯的危機，大家都在過日子。但這種「說不清楚哪裡不對」的感覺，往往比已經爆炸的問題更難處理——因為它很難被承認。</p>
+      <div class="result-highlight">「一個消音太久的家，最後會失去一個功能：把問題攤開、把訊息說完、把關係修回來。」</div>
+      <p>悶蓋型最危險的地方是：時間越久，開口的成本越高，大家越習慣用沉默換和平。等到有一天蓋子壓不住，壓力出口往往不是大人，而是孩子。</p>
+      <p>你現在需要的，不是等到出事才行動，而是在還有空間的時候，讓管道先通一點點。</p>
+    </div>
+
+    <div class="kit-embed-wrapper">
+      <h4>📥 獲取急救工具：1 分鐘回到自己</h4>
+      <p>知道了自己是悶蓋型，然後呢？當家裡的空氣又開始凝結時，你不需要立刻逼自己完美，你需要的是一個救急工具。<br><br>輸入 Email，我立刻把這份專屬的<strong>【1 分鐘回到自己】文字練習</strong>寄給你。這是一個當你覺得不知所措時，能馬上拿出來安定自己的指南。</p>
+      <iframe src="https://yourland.kit.com/f561033251" width="100%" height="250" style="border:none; overflow:hidden;" scrolling="no"></iframe>
+    </div>
+
+    <div class="result-cta-box">
+      <h3>預約一次 15 分鐘的通話</h3>
+      <p>你不需要等到有具體的問題才能來。<br>「說不清楚哪裡怪」本身就是最好的起點，<br>我來幫你把它說出來。</p>
+      <a href="https://calendar.app.google/ZjhDS3DB97kbdhgt9" target="_blank" class="btn-cta">預約免費 15 分鐘 →</a>
+    </div>
+  </div>
+
+  <div class="divider" id="aboutDivider" style="display:none"></div>
+  <div class="about-strip" id="aboutStrip" style="display:none">
+    <div class="about-avatar">療</div>
+    <div class="about-text">
+      <p class="about-name">Hi，我是藍方</p>
+      <p>家庭系統引導師，也是希塔療癒導師。我做的事不只是給你一套溝通工具，而是幫你看見那些工具用不上的地方——那些在壓力下自動接管你的舊模式，從哪裡來、為什麼那麼難改。</p>
+      <p style="margin-top:8px; color: var(--brown-light);">我自己也是局裡的人。專業不是永遠不出事，是出事時能更快看見模式，讓關係有機會重新接上。</p>
+    </div>
+  </div>
+
+</div><footer>
+  © 2025 &nbsp;｜&nbsp; 所有內容僅供參考，不取代專業心理諮詢
+</footer>
+
+<script>
+  const answers = {};
+
+  function startQuiz() {
+    document.getElementById('startSection').style.display = 'none';
+    document.getElementById('progressWrap').classList.add('visible');
+    showQuestion(1);
+  }
+
+  function showQuestion(n) {
+    document.querySelectorAll('.question-section').forEach(q => q.classList.remove('active'));
+    const el = document.getElementById('q' + n);
+    if (el) {
+      el.classList.add('active');
+      updateProgress(n);
+    }
+  }
+
+  function updateProgress(n) {
+    const pct = Math.round(((n - 1) / 8) * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressText').textContent = '第 ' + n + ' 題，共 8 題';
+    document.getElementById('progressPct').textContent = pct + '%';
+  }
+
+  function selectOption(el, qId, type) {
+    el.closest('.options').querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    answers[qId] = type;
+    const nextBtn = document.getElementById('next-' + qId);
+    if (nextBtn) nextBtn.classList.add('enabled');
+  }
+
+  function goNext(current) {
+    if (!answers['q' + current]) return;
+    showQuestion(current + 1);
+  }
+
+  function goBack(current) {
+    showQuestion(current - 1);
+  }
+
+  function showResult() {
+    if (!answers['q8']) return;
+
+    // Tally scores
+    const tally = { alarm: 0, solo: 0, silent: 0 };
+    Object.values(answers).forEach(v => tally[v]++);
+
+    let result = 'alarm';
+    if (tally.solo >= tally.alarm && tally.solo >= tally.silent) result = 'solo';
+    if (tally.silent > tally.alarm && tally.silent > tally.solo) result = 'silent';
+
+    // Hide all questions and progress
+    document.querySelectorAll('.question-section').forEach(q => q.classList.remove('active'));
+    document.getElementById('progressWrap').style.display = 'none';
+
+    // Update progress to 100%
+    document.getElementById('progressFill').style.width = '100%';
+
+    // Show result
+    document.getElementById('result-' + result).classList.add('active');
+    document.getElementById('aboutDivider').style.display = 'block';
+    document.getElementById('aboutStrip').style.display = 'flex';
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>
