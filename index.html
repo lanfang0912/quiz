@@ -498,7 +498,7 @@ function submitEmail() {
   const kitFormIds = CONFIG.kitForms;
   const kitFormId = kitFormIds[type];
   const kitApiKey = 'SXNVVdwrZCttf6ZjiuEOJg';
-  const kitUrl = `https://api.convertkit.com/v3/forms/${kitFormId}/subscribe`;
+  const kitUrl = `https://api.kit.com/v3/forms/${kitFormId}/subscribe`;
 
   fetch(kitUrl, {
     method: 'POST',
