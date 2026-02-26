@@ -507,7 +507,18 @@ function submitEmail() {
       email: email,
       first_name: name,
     }),
-  }).catch(() => {});
+  })
+  .then(res => res.json())
+  .then(data => {
+    console.log('Kit response:', data);
+    if (data.error) {
+      alert('Kit 錯誤：' + data.message);
+    }
+  })
+  .catch(err => {
+    console.error('Kit error:', err);
+    alert('送出失敗：' + err.message);
+  });
 
   setTimeout(() => showResult(name, email, type), 800);
 }
