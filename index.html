@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>主場水域自測｜你是在陸地硬撐，還是水裡前進？</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;900&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ─── 設定區 ── 換成你的資訊 ──────────────────── */
+/* Mailchimp 設定請見底部 <script> 區的 CONFIG 物件 */
+
+:root {
+  --deep:  #090f1f;
+  --ocean: #0b1f3a;
+  --teal:  #0a6e6d;
+  --aqua:  #12c4b0;
+  --foam:  #c5eeea;
+  --pearl: #edf8f7;
+  --gold:  #f5c842;
+  --text:  #e2f0f0;
+  --muted: #6ba8a8;
+  --card:  rgba(11,31,58,0.82);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--deep);
+  color:var(--text);
+  font-family:'Noto Sans TC',sans-serif;
+  font-weight:300;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* ── Water BG ── */
+.water-bg{position:fixed;inset:0;z-index:0;overflow:hidden;
+  background:linear-gradient(180deg,#090f1f 0%,#0b1f3a 55%,#092830 100%)}
+.wave{position:absolute;width:220%;height:320px;border-radius:50%;
+  background:var(--aqua);animation:waveFlow linear infinite}
+.wave:nth-child(1){bottom:8%;opacity:.06;animation-duration:20s}
+.wave:nth-child(2){bottom:18%;opacity:.04;animation-duration:27s;animation-delay:-10s;transform:scaleY(.55)}
+.wave:nth-child(3){bottom:3%;opacity:.035;animation-duration:16s;animation-delay:-4s}
+@keyframes waveFlow{0%{transform:translateX(-50%) scaleY(1)}50%{transform:translateX(0%) scaleY(1.1)}100%{transform:translateX(-50%) scaleY(1)}}
+.bubble{position:absolute;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle at 30% 30%,rgba(18,196,176,.38),transparent);
+  animation:rise linear infinite}
+@keyframes rise{0%{transform:translateY(100vh) scale(0);opacity:0}10%{opacity:1}90%{opacity:.4}100%{transform:translateY(-8vh) scale(1);opacity:0}}
+
+/* ── Page ── */
+.page{position:relative;z-index:1}
+section{display:none}
+section.active{display:block}
+
+/* ── Shared ── */
+.container{max-width:660px;margin:0 auto;padding:0 24px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+.anim{animation:fadeUp .7s ease both}
+.card{
+  background:var(--card);
+  border:1px solid rgba(18,196,176,.16);
+  border-radius:22px;
+  padding:40px 36px;
+  backdrop-filter:blur(14px);
+}
+@media(max-width:480px){.card{padding:28px 20px}}
+
+/* ── STEP 1: Landing ── */
+#s-landing{padding:60px 0 80px}
+.hero{text-align:center;padding-bottom:48px}
+.turtle{font-size:68px;display:block;margin-bottom:20px;
+  animation:float 4s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.badge{display:inline-block;border:1px solid var(--aqua);color:var(--aqua);
+  font-size:11px;letter-spacing:3px;padding:6px 20px;border-radius:40px;margin-bottom:28px}
+.hero h1{font-family:'Noto Serif TC',serif;font-size:clamp(26px,5.5vw,48px);
+  font-weight:900;line-height:1.35;color:#fff}
+.hero h1 em{color:var(--aqua);font-style:normal}
+.hero-sub{margin:18px auto 0;color:var(--muted);font-size:15px;line-height:1.95;
+  max-width:440px}
+
+/* story card */
+.story-card{margin-bottom:32px}
+.story-card .quote{
+  color:var(--foam);font-family:'Noto Serif TC',serif;font-size:17px;font-weight:600;
+  border-left:3px solid var(--aqua);padding-left:18px;margin:0 0 22px;line-height:1.7}
+.story-card p{color:#b8d8d8;font-size:14.5px;line-height:1.95;margin-bottom:14px}
+.story-card p:last-child{margin-bottom:0}
+
+/* promise list */
+.promise{margin:32px 0}
+.promise h3{font-family:'Noto Serif TC',serif;font-size:18px;font-weight:700;
+  color:#fff;margin-bottom:18px;text-align:center}
+.promise-item{display:flex;gap:16px;align-items:flex-start;margin-bottom:14px}
+.promise-icon{font-size:20px;flex-shrink:0;margin-top:2px}
+.promise-text{color:#b8d8d8;font-size:14px;line-height:1.8}
+.promise-text strong{color:var(--foam);font-weight:500}
+
+/* CTA */
+.cta-primary{
+  display:block;width:100%;text-align:center;
+  background:linear-gradient(135deg,var(--teal),var(--aqua));
+  color:var(--deep);font-weight:500;font-size:16px;letter-spacing:1px;
+  padding:18px 32px;border-radius:50px;border:none;cursor:pointer;
+  font-family:'Noto Sans TC',sans-serif;
+  box-shadow:0 8px 36px rgba(18,196,176,.32);
+  transition:all .3s ease;margin-top:8px}
+.cta-primary:hover{transform:translateY(-2px);box-shadow:0 14px 44px rgba(18,196,176,.45)}
+.cta-note{text-align:center;color:var(--muted);font-size:12px;margin-top:12px}
+
+/* ── STEP 2: Quiz ── */
+#s-quiz{padding:60px 0 80px}
+.quiz-top{text-align:center;margin-bottom:36px}
+.quiz-top h2{font-family:'Noto Serif TC',serif;font-size:24px;font-weight:900;color:#fff}
+.quiz-top p{color:var(--muted);font-size:13px;margin-top:8px}
+.progress-bar{height:3px;background:rgba(18,196,176,.12);border-radius:2px;
+  margin-bottom:36px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--aqua));
+  border-radius:2px;transition:width .5s cubic-bezier(.4,0,.2,1)}
+.q-wrap{display:none;animation:questionIn .45s ease}
+.q-wrap.active{display:block}
+@keyframes questionIn{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:translateX(0)}}
+.q-num{font-size:11px;letter-spacing:3px;color:var(--aqua);text-transform:uppercase;margin-bottom:14px}
+.q-text{font-family:'Noto Serif TC',serif;font-size:20px;font-weight:600;
+  line-height:1.65;color:#fff;margin-bottom:26px}
+.options{display:grid;gap:11px}
+.opt{background:rgba(255,255,255,.04);border:1px solid rgba(18,196,176,.18);
+  border-radius:13px;padding:15px 18px;color:#b8d8d8;font-size:14px;line-height:1.65;
+  text-align:left;cursor:pointer;transition:all .22s ease;
+  display:flex;gap:14px;align-items:flex-start;width:100%;
+  font-family:'Noto Sans TC',sans-serif}
+.opt:hover{background:rgba(18,196,176,.1);border-color:var(--aqua);color:#fff;transform:translateX(4px)}
+.opt.sel{background:rgba(18,196,176,.18);border-color:var(--aqua);color:#fff}
+.opt-l{width:28px;height:28px;border:1px solid currentColor;border-radius:7px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:500;flex-shrink:0;margin-top:2px;transition:all .22s}
+.opt.sel .opt-l{background:var(--aqua);border-color:var(--aqua);color:var(--deep)}
+
+/* ── STEP 3: Email Collect ── */
+#s-email{padding:60px 0 80px}
+.email-hero{text-align:center;margin-bottom:32px}
+.email-hero .emoji{font-size:52px;display:block;margin-bottom:16px}
+.email-hero h2{font-family:'Noto Serif TC',serif;font-size:26px;font-weight:900;color:#fff}
+.email-hero p{color:var(--muted);font-size:14px;margin-top:10px;line-height:1.9}
+.email-hero .type-preview{
+  display:inline-block;margin-top:16px;
+  background:rgba(18,196,176,.12);border:1px solid rgba(18,196,176,.25);
+  border-radius:10px;padding:10px 22px;
+  color:var(--aqua);font-size:13px;letter-spacing:1px}
+
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-size:13px;color:var(--muted);margin-bottom:8px;letter-spacing:.5px}
+.form-group input{
+  width:100%;background:rgba(255,255,255,.05);
+  border:1px solid rgba(18,196,176,.2);border-radius:12px;
+  padding:14px 18px;color:#fff;font-size:15px;
+  font-family:'Noto Sans TC',sans-serif;transition:border .2s}
+.form-group input::placeholder{color:rgba(18,196,176,.35)}
+.form-group input:focus{outline:none;border-color:var(--aqua)}
+.form-error{color:#ff7f7f;font-size:12px;margin-top:6px;display:none}
+.submit-wrap{margin-top:8px}
+.privacy{text-align:center;color:var(--muted);font-size:11.5px;margin-top:14px;line-height:1.7}
+
+/* spinner */
+.spinner{display:none;justify-content:center;align-items:center;gap:8px;
+  color:var(--muted);font-size:14px;margin-top:16px}
+.spinner.show{display:flex}
+.spin{width:20px;height:20px;border:2px solid rgba(18,196,176,.2);
+  border-top-color:var(--aqua);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── STEP 4: Result ── */
+#s-result{padding:60px 0 100px}
+.result-card{text-align:center}
+.result-badge{display:inline-block;background:linear-gradient(135deg,var(--teal),var(--aqua));
+  color:var(--deep);font-size:12px;font-weight:500;letter-spacing:2px;
+  padding:6px 22px;border-radius:30px;margin-bottom:22px}
+.result-emoji{font-size:60px;display:block;margin-bottom:14px}
+.result-title{font-family:'Noto Serif TC',serif;font-size:30px;font-weight:900;
+  color:#fff;margin-bottom:8px}
+.result-sub{color:var(--aqua);font-size:14px;letter-spacing:.5px;margin-bottom:28px}
+.result-body{background:rgba(255,255,255,.04);border-radius:16px;
+  padding:24px 22px;text-align:left;margin-bottom:28px}
+.result-body p{color:#b8d8d8;font-size:14.5px;line-height:1.95;margin-bottom:14px}
+.result-body p:last-child{margin-bottom:0}
+.result-need{color:var(--foam);font-weight:500;border-left:3px solid var(--gold);
+  padding-left:15px;margin:18px 0;font-size:14.5px;line-height:1.75}
+.email-confirm{background:rgba(18,196,176,.07);border:1px solid rgba(18,196,176,.18);
+  border-radius:12px;padding:14px 18px;color:var(--muted);font-size:13px;
+  margin-bottom:24px;text-align:center;line-height:1.7}
+.email-confirm strong{color:var(--aqua)}
+.divider{display:flex;align-items:center;gap:14px;margin:24px 0;
+  color:rgba(18,196,176,.3);font-size:11px}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:rgba(18,196,176,.12)}
+.retry{display:block;margin:16px auto 0;background:none;
+  border:1px solid rgba(18,196,176,.25);color:var(--muted);font-size:13px;
+  padding:10px 28px;border-radius:30px;cursor:pointer;transition:all .22s;
+  font-family:'Noto Sans TC',sans-serif}
+.retry:hover{border-color:var(--aqua);color:var(--aqua)}
+
+/* ── Footer ── */
+footer{text-align:center;padding:40px 24px;
+  color:rgba(100,160,160,.35);font-size:12px;position:relative;z-index:1}
+</style>
+</head>
+<body>
+
+<!-- Water BG -->
+<div class="water-bg" id="waterBg">
+  <div class="wave"></div><div class="wave"></div><div class="wave"></div>
+</div>
+
+<div class="page">
+
+<!-- ════════════════════════════════════════
+     STEP 1: LANDING PAGE
+════════════════════════════════════════ -->
+<section id="s-landing" class="active">
+  <div class="container">
+
+    <div class="hero anim">
+      <span class="turtle">🐢</span>
+      <div class="badge">主場水域測驗</div>
+      <h1>你是在<em>陸地硬撐</em>，<br>還是在<em>水裡前進</em>？</h1>
+      <p class="hero-sub">努力卻沒有成果，可能不是你不夠好——<br>而是你還沒找到屬於你的主場。</p>
+    </div>
+
+    <div class="card story-card anim" style="animation-delay:.15s">
+      <p class="quote">「每個人都是天才，只是你不能用錯的標準定義自己。」</p>
+      <p>在龜兔賽跑的陸地規則裡，兔子天生是贏家，烏龜即便再努力，充其量只能當個「很努力的輸家」。</p>
+      <p>但回到水裡，烏龜不需要羨慕兔子的彈跳力。流線型的身體本來就是為了前進而生——輕輕一滑，順著水流，就能游得很遠。</p>
+      <p>你現在的累，不是因為能力不足。很可能，你只是站錯了戰場。</p>
+    </div>
+
+    <div class="promise anim" style="animation-delay:.25s">
+      <h3>測驗完成後，你會得到 👇</h3>
+      <div class="promise-item">
+        <span class="promise-icon">🔍</span>
+        <div class="promise-text"><strong>找出你卡住的「錯置戰場」是什麼</strong><br>看清楚你為什麼一直在用不適合自己的方式努力</div>
+      </div>
+      <div class="promise-item">
+        <span class="promise-icon">💎</span>
+        <div class="promise-text"><strong>盤點你其實已經有的優勢與資源</strong><br>你以為的弱點，很可能是還沒放對地方的強項</div>
+      </div>
+      <div class="promise-item">
+        <span class="promise-icon">🚀</span>
+        <div class="promise-text"><strong>給你一個可以立刻開始的下一步</strong><br>不是模糊建議，而是針對你的情況，可以今天就行動的方向</div>
+      </div>
+    </div>
+
+    <div class="anim" style="animation-delay:.35s">
+      <button class="cta-primary" onclick="goTo('s-quiz')">
+        🌊 開始 3 題免費測驗（約 1 分鐘）
+      </button>
+      <p class="cta-note">完全免費 · 輸入 email 立刻看結果</p>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════
+     STEP 2: QUIZ
+════════════════════════════════════════ -->
+<section id="s-quiz">
+  <div class="container">
+
+    <div class="quiz-top anim">
+      <h2>🌊 主場水域 3 題自測</h2>
+      <p>直覺選最接近你的答案，不用想太久</p>
+    </div>
+
+    <div class="progress-bar anim" style="animation-delay:.1s">
+      <div class="progress-fill" id="progressFill" style="width:0%"></div>
+    </div>
+
+    <!-- Q1 -->
+    <div class="card q-wrap active" id="q1">
+      <div class="q-num">第 1 題 · 共 3 題</div>
+      <div class="q-text">當你很努力卻沒有成果時，<br>你最常出現的感覺是？</div>
+      <div class="options">
+        <button class="opt" onclick="pick(1,'A',this)"><span class="opt-l">A</span><span>我是不是其實沒有那麼厲害，只是運氣好？感覺自己不配擁有這些成果</span></button>
+        <button class="opt" onclick="pick(1,'B',this)"><span class="opt-l">B</span><span>我明明做了很多，但好像都用錯力，成果和付出不成正比</span></button>
+        <button class="opt" onclick="pick(1,'C',this)"><span class="opt-l">C</span><span>我其實知道方向不對，但不知道要怎麼換，卡在原地走不出去</span></button>
+        <button class="opt" onclick="pick(1,'D',this)"><span class="opt-l">D</span><span>我很容易累，但又停不下來，總覺得停下來就會輸給別人</span></button>
+      </div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="card q-wrap" id="q2">
+      <div class="q-num">第 2 題 · 共 3 題</div>
+      <div class="q-text">當你看到別人在事業上很順時，<br>你心裡最常浮現的念頭是？</div>
+      <div class="options">
+        <button class="opt" onclick="pick(2,'A',this)"><span class="opt-l">A</span><span>為什麼他們看起來比較輕鬆？是不是我哪裡不夠好？</span></button>
+        <button class="opt" onclick="pick(2,'B',this)"><span class="opt-l">B</span><span>是不是我不夠努力？但我感覺已經很拼了，再拼下去真的撐不住</span></button>
+        <button class="opt" onclick="pick(2,'C',this)"><span class="opt-l">C</span><span>我好像一直在跟不適合自己的規則比賽，跑的根本不是同一條賽道</span></button>
+        <button class="opt" onclick="pick(2,'D',this)"><span class="opt-l">D</span><span>我知道我有能力，但不知道怎麼放對位置，有種使不上力的感覺</span></button>
+      </div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="card q-wrap" id="q3">
+      <div class="q-num">第 3 題 · 共 3 題</div>
+      <div class="q-text">如果可以改變一件事，<br>你最希望你的事業變成什麼樣子？</div>
+      <div class="options">
+        <button class="opt" onclick="pick(3,'A',this)"><span class="opt-l">A</span><span>有清楚的方法和方向，不用每天自己猜下一步要怎麼做</span></button>
+        <button class="opt" onclick="pick(3,'B',this)"><span class="opt-l">B</span><span>有節奏、有夥伴支持，不用一個人扛、有人可以一起走</span></button>
+        <button class="opt" onclick="pick(3,'C',this)"><span class="opt-l">C</span><span>可以放大優勢，而不是一直在補自己的弱點、跑別人的賽道</span></button>
+        <button class="opt" onclick="pick(3,'D',this)"><span class="opt-l">D</span><span>可以借力使力，讓方法和系統幫我推進，而不是全靠意志力</span></button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════
+     STEP 3: EMAIL COLLECT
+════════════════════════════════════════ -->
+<section id="s-email">
+  <div class="container">
+
+    <div class="email-hero anim">
+      <span class="emoji">📩</span>
+      <h2>你的診斷結果準備好了！</h2>
+      <p>輸入你的資訊，立刻看到你的主場水域類型，<br>同時把完整結果寄到你的信箱。</p>
+      <div class="type-preview" id="typePreview">🐢 正在分析你的類型中⋯</div>
+    </div>
+
+    <div class="card anim" style="animation-delay:.15s">
+      <div class="form-group">
+        <label>你的姓名</label>
+        <input type="text" id="inp-name" placeholder="請輸入你的名字" autocomplete="given-name">
+        <div class="form-error" id="err-name">請輸入姓名</div>
+      </div>
+      <div class="form-group">
+        <label>Email 信箱</label>
+        <input type="email" id="inp-email" placeholder="your@email.com" autocomplete="email">
+        <div class="form-error" id="err-email">請輸入有效的 Email</div>
+      </div>
+      <div class="submit-wrap">
+        <button class="cta-primary" id="submitBtn" onclick="submitEmail()">
+          立刻看我的結果 →
+        </button>
+      </div>
+      <div class="spinner" id="spinner">
+        <div class="spin"></div><span>正在準備你的結果⋯</span>
+      </div>
+      <p class="privacy">🔒 你的資訊不會被分享給任何第三方<br>只會用來傳送你的測驗結果與相關資訊</p>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════
+     STEP 4: RESULT
+════════════════════════════════════════ -->
+<section id="s-result">
+  <div class="container">
+    <div class="card result-card anim" id="resultCard"></div>
+  </div>
+</section>
+
+</div><!-- .page -->
+
+<footer>© 2026 主場水域 · 找到你真正的賽道</footer>
+
+<!-- ════════════════════════════════════════
+     SCRIPT
+════════════════════════════════════════ -->
+<script>
+/* ─────────────────────────────────────────────
+   ⚙️  設定區 — 只有 bookingUrl 需要換
+──────────────────────────────────────────────*/
+const CONFIG = {
+  // Kit Form UID（已設定好）
+  kitFormUid: '9b59be4f37',
+  kitSubdomain: 'yourland',
+
+  // 30分鐘諮詢預約連結（換成你的 Calendly 或 Line 連結）
+  bookingUrl: 'https://line.me/ti/p/YOUR_LINE_ID',
+  bookingText: '預約 30 分鐘免費諮詢 →',
+};
+/* ──────────────────────────────────────────── */
+
+
+/* 答案 & 類型資料 */
+const answers = {};
+
+const TYPES = {
+  doubt: {
+    badge:'自我懷疑型', emoji:'🌊',
+    title:'你不是能力不足',
+    sub:'你只是還沒看見自己真正的價值',
+    preview:'你是 🌊 自我懷疑型',
+    body:`<p>你應該是那種明明做得不錯、但總是覺得自己不夠好的人。</p>
+    <p>你可能常常會想「我是不是只是運氣好」，或者看到別人成功的時候覺得「一定是我不夠努力」。腦子裡有個聲音一直說「你不行」，就算做出了成果也不敢相信是自己的實力。</p>
+    <p class="result-need">⚡ 你最需要的：有人幫你看見那些你自己看不見的優勢，還有能給你具體成果回饋的環境，讓你知道「這真的是我做到的」。</p>
+    <p>走出來的人，通常都是找到一個能看見她們價值的環境，然後慢慢開始相信自己。</p>`,
+  },
+  lost: {
+    badge:'方向迷失型', emoji:'🧭',
+    title:'你不是沒有方向感',
+    sub:'你只是還沒找到「對你來說是對的」那條路',
+    preview:'你是 🧭 方向迷失型',
+    body:`<p>你應該是那種其實很清楚現在這條路不對、但不知道該往哪裡轉的人。</p>
+    <p>你知道繼續這樣下去不會更好，你其實有能力，只是不確定要怎麼把能力放對位置。你最需要的，是一個清楚的指引，不用每天自己猜方向。</p>
+    <p class="result-need">⚡ 你最需要的：有人走過類似的路可以參考，或者有個低風險的方式讓你先試試看，不用一次就賭很大。</p>
+    <p>踏出第一步之後，才會發現原來沒有想像中那麼可怕。</p>`,
+  },
+  wrongForce: {
+    badge:'用錯力型', emoji:'⚡',
+    title:'你不是不夠努力',
+    sub:'你只是還沒找到讓你事半功倍的方法',
+    preview:'你是 ⚡ 用錯力型',
+    body:`<p>你應該是那種很努力、做很多事，但總覺得力氣用錯地方的人。</p>
+    <p>你明明做了一堆事，但成果跟付出不成正比。你知道自己有能力，但不知道怎麼放對位置，然後很容易累，因為你一直在硬推，沒有順勢前進的感覺。</p>
+    <p class="result-need">⚡ 你最需要的：一套清楚的方法和系統，不用每天重新想要怎麼做。有節奏、有流程，不必靠意志力苦撐。</p>
+    <p>走得遠的人，通常不是最拼命的人，而是最會借力使力的人。</p>`,
+  },
+  support: {
+    badge:'缺乏支持型', emoji:'🤝',
+    title:'你不是不夠堅強',
+    sub:'你只是需要一個有支持、有夥伴的環境',
+    preview:'你是 🤝 缺乏支持型',
+    body:`<p>你應該是那種其實能力不錯、也知道自己要做什麼，但總覺得一個人扛太累的人。</p>
+    <p>你不是做不到，你只是覺得如果可以有人一起走、有個系統可以依靠，應該不用這麼辛苦。</p>
+    <p class="result-need">⚡ 你最需要的：有節奏、有同頻的人一起前進的環境。不是依賴別人，而是有人可以互相拉一把，你會走得更遠也更穩。</p>
+    <p>走得久的人，通常都不是最孤獨的人，而是知道怎麼找到夥伴一起走的人。</p>`,
+  },
+};
+
+function getType() {
+  const v = [answers[1], answers[2], answers[3]];
+  const cnt = x => v.filter(a => a === x).length;
+  if (cnt('A') >= 2) return 'doubt';
+  if (cnt('C') >= 2) return 'lost';
+  if (v.filter(a => a==='B'||a==='D').length >= 2) return 'wrongForce';
+  const q3 = answers[3];
+  if (q3 === 'B') return 'support';
+  if (q3 === 'A') return 'lost';
+  return 'wrongForce';
+}
+
+/* Step control */
+function goTo(id) {
+  document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+/* Quiz logic */
+function pick(q, val, btn) {
+  document.getElementById('q'+q).querySelectorAll('.opt').forEach(b => b.classList.remove('sel'));
+  btn.classList.add('sel');
+  answers[q] = val;
+  setTimeout(() => {
+    if (q < 3) {
+      document.getElementById('q'+q).classList.remove('active');
+      document.getElementById('q'+(q+1)).classList.add('active');
+      document.getElementById('progressFill').style.width = (q/3*100) + '%';
+    } else {
+      document.getElementById('progressFill').style.width = '100%';
+      const t = TYPES[getType()];
+      document.getElementById('typePreview').textContent = t.preview;
+      setTimeout(() => goTo('s-email'), 300);
+    }
+  }, 420);
+}
+
+/* Email submit */
+function submitEmail() {
+  const name = document.getElementById('inp-name').value.trim();
+  const email = document.getElementById('inp-email').value.trim();
+  let ok = true;
+
+  document.getElementById('err-name').style.display = 'none';
+  document.getElementById('err-email').style.display = 'none';
+
+  if (!name) { document.getElementById('err-name').style.display = 'block'; ok = false; }
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    document.getElementById('err-email').style.display = 'block'; ok = false;
+  }
+  if (!ok) return;
+
+  document.getElementById('submitBtn').style.display = 'none';
+  document.getElementById('spinner').classList.add('show');
+
+  const type = getType();
+  const t = TYPES[type];
+
+  // ── Kit Form POST ──────────────────────────────
+  // Kit 允許直接從前端 POST，不需要後端
+  const kitUrl = `https://app.convertkit.com/forms/${CONFIG.kitFormUid}/subscriptions`;
+
+  const formData = new FormData();
+  formData.append('email_address', email);
+  formData.append('first_name', name);
+  // 傳測驗類型到 Kit（Kit 的 fields 格式）
+  formData.append('fields[quiz_type]', t.badge);
+
+  fetch(kitUrl, {
+    method: 'POST',
+    body: formData,
+    mode: 'no-cors', // Kit 需要 no-cors，會靜默成功
+  }).catch(() => {}); // 靜默錯誤，不影響使用者體驗
+
+  // 不等 API 回應，直接顯示結果（no-cors 無法讀取 response）
+  setTimeout(() => showResult(name, email, type), 800);
+}
+
+function showResult(name, email, type) {
+  const t = TYPES[type];
+  document.getElementById('resultCard').innerHTML = `
+    <div class="result-badge">${t.badge}</div>
+    <span class="result-emoji">${t.emoji}</span>
+    <div class="result-title">${t.title}</div>
+    <div class="result-sub">${t.sub}</div>
+    <div class="email-confirm">📬 完整診斷已寄到 <strong>${document.getElementById('inp-email').value}</strong><br>如果沒收到，請記得檢查垃圾郵件</div>
+    <div class="result-body">${t.body}</div>
+    <div class="divider">你的主場水域就在前方</div>
+    <p style="color:var(--muted);font-size:13.5px;margin-bottom:20px;line-height:1.85;text-align:center">
+      我可以用 30 分鐘陪你找出「卡住的真正原因」，<br>然後給你一個今天就能開始的行動方向。
+    </p>
+    <a href="${CONFIG.bookingUrl}" class="cta-primary" target="_blank">${CONFIG.bookingText}</a>
+    <button class="retry" onclick="restart()">重新測驗</button>
+  `;
+  goTo('s-result');
+}
+
+function restart() {
+  [1,2,3].forEach(n => {
+    answers[n] = undefined;
+    document.getElementById('q'+n).querySelectorAll('.opt').forEach(b => b.classList.remove('sel'));
+    if (n===1) document.getElementById('q'+n).classList.add('active');
+    else document.getElementById('q'+n).classList.remove('active');
+  });
+  document.getElementById('progressFill').style.width = '0%';
+  document.getElementById('inp-name').value = '';
+  document.getElementById('inp-email').value = '';
+  document.getElementById('submitBtn').style.display = 'block';
+  document.getElementById('spinner').classList.remove('show');
+  document.getElementById('typePreview').textContent = '🐢 正在分析你的類型中⋯';
+  goTo('s-landing');
+}
+
+/* Bubbles */
+(function() {
+  const bg = document.getElementById('waterBg');
+  for (let i=0; i<14; i++) {
+    const b = document.createElement('div');
+    b.className = 'bubble';
+    const s = Math.random()*28+6;
+    b.style.cssText=`width:${s}px;height:${s}px;left:${Math.random()*100}%;animation-duration:${Math.random()*22+14}s;animation-delay:-${Math.random()*22}s`;
+    bg.appendChild(b);
+  }
+})();
+</script>
+</body>
+</html>
