@@ -510,14 +510,10 @@ function submitEmail() {
   })
   .then(res => res.json())
   .then(data => {
-    console.log('Kit response:', data);
-    if (data.error) {
-      alert('Kit 錯誤：' + data.message);
-    }
+    alert('Kit 回應：' + JSON.stringify(data));
   })
   .catch(err => {
-    console.error('Kit error:', err);
-    alert('送出失敗：' + err.message);
+    alert('送出失敗：' + err.message + ' / ' + err);
   });
 
   setTimeout(() => showResult(name, email, type), 800);
