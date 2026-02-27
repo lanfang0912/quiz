@@ -150,7 +150,7 @@ async function submitForm(e) {
   btn.textContent = '準備中⋯';
   btn.disabled = true;
   try {
-    await fetch('https://app.convertkit.com/forms/9141183/subscriptions', {
+    await fetch('https://app.convertkit.com/forms/9141329/subscriptions', {
       method: 'POST', body: new FormData(e.target), mode: 'no-cors'
     });
   } catch(err) {}
