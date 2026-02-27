@@ -3,7 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>你們還在同一隊嗎？｜免費關係檢核表</title>
+<title>你們還在同一隊嗎？｜許藍方 免費關係檢核表</title>
+<meta name="description" content="吵到最後，留在桌上的是那句：你還把我當隊友嗎？兩份免費檢核表，填 email 立刻收到。">
+<meta property="og:title" content="你們還在同一隊嗎？｜許藍方 免費關係檢核表">
+<meta property="og:description" content="大人版＋孩子版關係檢核表，填 email 立刻收到。">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="zh_TW">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
 <style>
@@ -27,143 +32,161 @@ body {
   font-weight: 300;
   overflow-x: hidden;
 }
-.wrap { max-width: 640px; margin: 0 auto; padding: 0 28px; }
-header { padding: 44px 0 0; opacity: 0; animation: up 0.7s 0.1s ease forwards; }
+.wrap { max-width: 600px; margin: 0 auto; padding: 0 28px; }
+
+/* header */
+header { padding: 40px 0 0; opacity: 0; animation: up 0.7s 0.1s ease forwards; }
 .site-tag { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 13px; letter-spacing: 0.12em; color: var(--muted); }
-.hero { padding: 56px 0 48px; }
-.hero-label { display: inline-flex; align-items: center; gap: 10px; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--terracotta); margin-bottom: 32px; opacity: 0; animation: up 0.7s 0.2s ease forwards; }
+
+/* hero */
+.hero { padding: 52px 0 44px; }
+.hero-label { display: inline-flex; align-items: center; gap: 10px; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--terracotta); margin-bottom: 28px; opacity: 0; animation: up 0.7s 0.2s ease forwards; }
 .hero-label::before { content: ''; display: block; width: 24px; height: 1px; background: var(--terracotta); }
-h1 { font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: clamp(40px, 8vw, 64px); line-height: 1.2; color: var(--ink); margin-bottom: 10px; opacity: 0; animation: up 0.7s 0.3s ease forwards; }
+h1 { font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: clamp(38px, 8vw, 60px); line-height: 1.2; color: var(--ink); margin-bottom: 10px; opacity: 0; animation: up 0.7s 0.3s ease forwards; }
 h1 em { font-style: italic; color: var(--terracotta); }
-.hero-sub { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(17px, 3vw, 21px); color: var(--muted); margin-bottom: 40px; line-height: 1.6; opacity: 0; animation: up 0.7s 0.4s ease forwards; }
-.pull { border-left: 2px solid var(--terracotta); padding: 20px 24px; margin-bottom: 52px; background: var(--bg2); opacity: 0; animation: up 0.7s 0.5s ease forwards; }
-.pull p { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(17px, 3vw, 21px); line-height: 1.8; color: var(--ink-mid); }
-.pull cite { display: block; margin-top: 12px; font-size: 12px; letter-spacing: 0.1em; color: var(--faint); font-style: normal; }
-.gets { margin-bottom: 52px; opacity: 0; animation: up 0.7s 0.55s ease forwards; }
-.gets-title { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 24px; }
-.get-item { display: flex; gap: 20px; padding: 20px 0; border-bottom: 1px solid var(--border); }
+.hero-sub { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(16px, 3vw, 20px); color: var(--muted); margin-bottom: 36px; line-height: 1.6; opacity: 0; animation: up 0.7s 0.4s ease forwards; }
+
+/* pull quote */
+.pull { border-left: 2px solid var(--terracotta); padding: 18px 22px; margin-bottom: 48px; background: var(--bg2); opacity: 0; animation: up 0.7s 0.5s ease forwards; }
+.pull p { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(16px, 3vw, 20px); line-height: 1.8; color: var(--ink-mid); }
+.pull cite { display: block; margin-top: 10px; font-size: 12px; letter-spacing: 0.1em; color: var(--faint); font-style: normal; }
+
+/* what you get */
+.gets { margin-bottom: 48px; opacity: 0; animation: up 0.7s 0.55s ease forwards; }
+.gets-title { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
+.get-item { display: flex; gap: 18px; padding: 18px 0; border-bottom: 1px solid var(--border); }
 .get-item:first-of-type { border-top: 1px solid var(--border); }
-.get-icon { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 28px; color: var(--terracotta); line-height: 1; flex-shrink: 0; padding-top: 2px; }
-.get-name { font-size: 15px; color: var(--ink); margin-bottom: 5px; }
+.get-icon { font-size: 22px; flex-shrink: 0; padding-top: 2px; }
+.get-name { font-size: 15px; color: var(--ink); margin-bottom: 4px; }
 .get-desc { font-size: 13px; color: var(--muted); line-height: 1.8; }
-.form-box { background: white; border: 1px solid var(--border); padding: 44px 40px; margin-bottom: 64px; opacity: 0; animation: up 0.7s 0.65s ease forwards; position: relative; overflow: hidden; box-shadow: 0 2px 24px rgba(90,50,20,0.06); }
+
+/* form box */
+.form-box { background: white; border: 1px solid var(--border); padding: 40px 36px; margin-bottom: 60px; opacity: 0; animation: up 0.7s 0.65s ease forwards; position: relative; overflow: hidden; box-shadow: 0 2px 20px rgba(90,50,20,0.06); }
 .form-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--terracotta), var(--gold)); }
-.form-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(22px, 4vw, 28px); font-weight: 400; color: var(--ink); margin-bottom: 8px; line-height: 1.4; }
-.form-note { font-size: 13px; color: var(--muted); margin-bottom: 32px; line-height: 1.85; }
-.kit-embed-placeholder { background: var(--bg2); border: 2px dashed var(--border); border-radius: 4px; padding: 32px 24px; text-align: center; }
-.kit-embed-placeholder p { font-size: 13px; color: var(--muted); line-height: 1.8; }
-.kit-embed-placeholder code { display: inline-block; margin-top: 10px; background: rgba(0,0,0,0.05); padding: 4px 10px; border-radius: 3px; font-size: 12px; color: var(--terracotta); font-family: monospace; }
-.formkit-form { background: transparent !important; padding: 0 !important; }
-.formkit-form input[type="email"], .formkit-form input[type="text"] { width: 100% !important; padding: 14px 18px !important; border: 1.5px solid var(--border) !important; background: var(--bg) !important; font-family: 'Noto Serif TC', serif !important; font-size: 15px !important; color: var(--ink) !important; margin-bottom: 12px !important; border-radius: 0 !important; outline: none !important; }
-.formkit-form input:focus { border-color: var(--terracotta) !important; }
-.formkit-form button[type="submit"], .formkit-submit { width: 100% !important; padding: 16px !important; background: var(--ink) !important; color: white !important; border: none !important; font-family: 'Noto Serif TC', serif !important; font-size: 15px !important; letter-spacing: 0.06em !important; cursor: pointer !important; border-radius: 0 !important; transition: background 0.3s !important; }
-.formkit-form button[type="submit"]:hover { background: var(--terracotta) !important; }
-.formkit-powered-by-convertkit-container { display: none !important; }
-.proof { margin-bottom: 64px; opacity: 0; animation: up 0.7s 0.75s ease forwards; }
-.proof-title { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 24px; text-align: center; }
-.testimonial { padding: 24px 0; border-bottom: 1px solid var(--border); }
-.testimonial:first-of-type { border-top: 1px solid var(--border); }
-.t-text { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 18px; line-height: 1.8; color: var(--ink-mid); margin-bottom: 10px; }
-.t-from { font-size: 12px; color: var(--faint); letter-spacing: 0.08em; }
-footer { padding: 36px 0 56px; border-top: 1px solid var(--border); opacity: 0; animation: up 0.7s 0.8s ease forwards; }
-.footer-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
-.footer-name { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 16px; color: var(--muted); }
-.footer-note { font-size: 12px; color: var(--faint); line-height: 1.8; text-align: right; }
-#kit-form-wrapper form input[type="email"] {
-  display: block;
-  width: 100%;
-  padding: 14px 18px;
-  border: 1.5px solid var(--border);
-  background: var(--bg);
-  font-family: 'Noto Serif TC', serif;
-  font-size: 15px;
-  color: var(--ink);
-  margin-bottom: 12px;
-  outline: none;
-  transition: border-color 0.2s;
+.form-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(20px, 4vw, 26px); font-weight: 400; color: var(--ink); margin-bottom: 6px; line-height: 1.4; }
+.form-note { font-size: 13px; color: var(--muted); margin-bottom: 28px; line-height: 1.85; }
+
+.field { margin-bottom: 12px; }
+.field label { display: block; font-size: 12px; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 6px; }
+.field input {
+  display: block; width: 100%; padding: 13px 16px;
+  border: 1.5px solid var(--border); background: var(--bg);
+  font-family: 'Noto Serif TC', serif; font-size: 15px; color: var(--ink);
+  outline: none; transition: border-color 0.2s;
 }
-#kit-form-wrapper form input[type="email"]:focus {
-  border-color: var(--terracotta);
+.field input:focus { border-color: var(--terracotta); }
+.field input::placeholder { color: var(--faint); }
+
+.submit-btn {
+  display: block; width: 100%; margin-top: 16px;
+  padding: 16px; background: var(--ink); color: white; border: none;
+  font-family: 'Noto Serif TC', serif; font-size: 15px; letter-spacing: 0.06em;
+  cursor: pointer; transition: background 0.3s;
 }
-#kit-form-wrapper form button[type="submit"] {
-  display: block;
-  width: 100%;
-  padding: 16px;
-  background: var(--ink);
-  color: white;
-  border: none;
-  font-family: 'Noto Serif TC', serif;
-  font-size: 15px;
-  letter-spacing: 0.06em;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-#kit-form-wrapper form button[type="submit"]:hover {
-  background: var(--terracotta);
-}
+.submit-btn:hover { background: var(--terracotta); }
+.submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.privacy { margin-top: 14px; font-size: 11px; color: var(--faint); text-align: center; letter-spacing: 0.05em; }
+
+/* success state */
+.success { display: none; text-align: center; padding: 12px 0; }
+.success-icon { font-size: 40px; margin-bottom: 20px; }
+.success-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(24px, 5vw, 34px); font-weight: 400; color: var(--ink); margin-bottom: 16px; line-height: 1.4; }
+.success-title em { font-style: italic; color: var(--terracotta); }
+.success-body { font-size: 14px; color: var(--ink-mid); line-height: 1.95; margin-bottom: 20px; }
+.success-note { font-size: 12px; color: var(--faint); line-height: 1.8; padding: 14px 18px; border: 1px solid var(--border); }
+
+/* footer */
+footer { padding: 32px 0 52px; border-top: 1px solid var(--border); opacity: 0; animation: up 0.7s 0.75s ease forwards; }
+.footer-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+.footer-name { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 15px; color: var(--muted); }
+.footer-note { font-size: 11px; color: var(--faint); line-height: 1.8; text-align: right; }
+
 @keyframes up { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-@media (max-width: 500px) { .form-box { padding: 32px 22px; } .footer-inner { flex-direction: column; align-items: flex-start; } .footer-note { text-align: left; } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+@media (max-width: 480px) {
+  .form-box { padding: 28px 20px; }
+  .footer-inner { flex-direction: column; align-items: flex-start; }
+  .footer-note { text-align: left; }
+}
 </style>
 </head>
 <body>
 <div class="wrap">
+
   <header>
-    <div class="site-tag">許藍方 ／ 希塔療癒導師・關係靈氣療癒師</div>
+    <div class="site-tag">許藍方・希塔療癒導師・關係靈氣療癒師</div>
   </header>
+
   <section class="hero">
     <div class="hero-label">免費資源</div>
     <h1>關係裡的傷，<br>從<em>看見</em>開始</h1>
     <p class="hero-sub">兩份檢核表，幫你看清楚是哪裡卡住了</p>
     <div class="pull">
       <p>「吵到最後，事件早就退場。留在桌上的，是那句：你還把我當隊友嗎？」</p>
-      <cite>—— 大人版關係檢核表序言</cite>
+      <cite>—— 大人版關係檢核表</cite>
     </div>
     <div class="gets">
-      <div class="gets-title">你會收到</div>
+      <div class="gets-title">領取後你會收到</div>
       <div class="get-item">
-        <div class="get-icon">一</div>
+        <div class="get-icon">🧭</div>
         <div>
           <div class="get-name">大人版關係檢核表</div>
           <div class="get-desc">看見你在關係裡的模式——連結、防衛、逃避、或是深層的恐懼。不是評分，是看見。</div>
         </div>
       </div>
       <div class="get-item">
-        <div class="get-icon">二</div>
+        <div class="get-icon">🌱</div>
         <div>
           <div class="get-name">孩子版檢核表（大學生也適用）</div>
           <div class="get-desc">辨識從原生家庭帶來的信念，以及哪些重量不該由你來扛。</div>
         </div>
       </div>
       <div class="get-item">
-        <div class="get-icon">三</div>
+        <div class="get-icon">📩</div>
         <div>
-          <div class="get-name">使用說明與下一步方向</div>
-          <div class="get-desc">看完之後怎麼用？希塔療癒與關係靈氣能在哪裡幫到你？一頁說清楚。</div>
+          <div class="get-name">填完立刻收到</div>
+          <div class="get-desc">不需要等，填完 email 馬上寄出。</div>
         </div>
       </div>
     </div>
   </section>
 
   <div class="form-box">
-    <div class="form-title">把檢核表寄到你的信箱</div>
-    <p class="form-note">填完之後立刻寄出，不會有垃圾信。<br>偶爾會分享希塔療癒與關係修復的延伸內容，隨時可以取消。</p>
-    <div id="kit-form-wrapper">
-      <form action="https://app.convertkit.com/forms/9141183/subscriptions" method="post" target="_blank">
-        <input type="email" name="email_address" placeholder="你的 email" required>
-        <button type="submit">立刻領取檢核表 →</button>
+    <!-- 表單 -->
+    <div id="form-area">
+      <div class="form-title">免費領取關係檢核表</div>
+      <p class="form-note">輸入你的資訊，我馬上把兩份檢核表寄給你</p>
+      <form id="kit-form" onsubmit="submitForm(event)">
+        <div class="field">
+          <label>你的名字</label>
+          <input type="text" name="first_name" placeholder="請輸入名字" required>
+        </div>
+        <div class="field">
+          <label>Email 信箱</label>
+          <input type="email" name="email_address" placeholder="請輸入有效的 Email" required>
+        </div>
+        <button type="submit" class="submit-btn" id="submit-btn">
+          免費領取關係檢核表 →
+        </button>
       </form>
+      <p class="privacy">🔒 你的資訊不會被分享給任何第三方</p>
     </div>
-  </div>
 
-  <div class="proof">
-    <div class="proof-title">讀者說</div>
-    <div class="testimonial">
-      <div class="t-text">「看完之後我傳給老公，我們默默坐著看了很久。」</div>
-      <div class="t-from">— 私訊讀者</div>
-    </div>
-    <div class="testimonial">
-      <div class="t-text">「孩子版那頁讓我哭出來，因為我就是那個一直問『是不是因為我』的孩子。」</div>
-      <div class="t-from">— 私訊讀者</div>
+    <!-- 成功畫面 -->
+    <div class="success" id="success-area">
+      <div class="success-icon">✉️</div>
+      <div class="success-title">檢核表<em>寄出了</em></div>
+      <p class="success-body">
+        去信箱找找吧。<br>
+        不需要一次全部回答——<br>
+        哪一題讓你停下來，就停在那裡。
+      </p>
+      <div class="success-note">
+        找不到信？記得檢查垃圾郵件資料夾，<br>
+        或把藍方的 email 加入聯絡人，之後的信就不會跑掉了。
+      </div>
     </div>
   </div>
 
@@ -173,6 +196,33 @@ footer { padding: 36px 0 56px; border-top: 1px solid var(--border); opacity: 0; 
       <div class="footer-note">填寫即同意接收電子報<br>你的 email 不會分享給任何第三方</div>
     </div>
   </footer>
+
 </div>
+
+<script>
+async function submitForm(e) {
+  e.preventDefault();
+  const form = e.target;
+  const btn = document.getElementById('submit-btn');
+  const data = new FormData(form);
+
+  btn.textContent = '準備中⋯';
+  btn.disabled = true;
+
+  try {
+    await fetch('https://app.convertkit.com/forms/9141183/subscriptions', {
+      method: 'POST',
+      body: data,
+      mode: 'no-cors'
+    });
+  } catch(err) {}
+
+  // Show success regardless (no-cors won't give us response)
+  document.getElementById('form-area').style.display = 'none';
+  const success = document.getElementById('success-area');
+  success.style.display = 'block';
+  success.style.animation = 'fadeIn 0.5s ease forwards';
+}
+</script>
 </body>
 </html>
