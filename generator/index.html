@@ -162,6 +162,12 @@ h1 em{font-style:italic;color:var(--terracotta)}
 <script>
 let pageData=null;
 
+// 記住 API key
+window.addEventListener('load', () => {
+  const saved = localStorage.getItem('anthropic_key');
+  if (saved) document.getElementById('ai-key').value = saved;
+});
+
 function switchMode(m){
   document.querySelectorAll('.mode-tab').forEach((t,i)=>t.classList.toggle('active',(m==='ai'&&i===0)||(m==='manual'&&i===1)));
   document.getElementById('panel-ai').classList.toggle('active',m==='ai');
@@ -175,6 +181,7 @@ async function runAI(){
   const apiKey=document.getElementById('ai-key').value.trim();
   if(!article)return alert('請先貼入文章內容');
   if(!apiKey)return alert('請填入 Anthropic API Key');
+  localStorage.setItem('anthropic_key', apiKey);
   const btn=document.getElementById('ai-btn');
   btn.innerHTML='<span class="loading">AI 分析中</span>';
   btn.disabled=true;
