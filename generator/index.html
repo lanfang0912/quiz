@@ -185,7 +185,7 @@ async function runAI(){
   const btn=document.getElementById('ai-btn');
   btn.innerHTML='<span class="loading">AI 分析中</span>';
   btn.disabled=true;
-  const prompt=`你是一個專門幫助療癒師、諮商師設計內容行銷的專家。分析以下文章，生成「${lead}」的 Landing Page 文案、文章結尾 CTA 及 Kit 歡迎信。文章：\n${article}\n\n只回 JSON 不要其他文字：{"page_title":"SEO標題60字內","og_desc":"社群描述80字內","t1":"主標題第一行8字內","t2":"斜體第二行6字內","sub":"副標題一句話20字內","quote":"文章最打動人的一句原文","cite":"這句話的來源說明","gets":[{"icon":"emoji","name":"名稱","desc":"說明25字內"},{"icon":"emoji","name":"名稱","desc":"說明25字內"},{"icon":"emoji","name":"名稱","desc":"說明25字內"}],"form_title":"表單標題15字內","form_note":"表單說明一句話","btn":"按鈕文字10字內結尾加→","success_t1":"成功標題第一部分","success_em":"斜體強調詞","success_body":"成功後三行內溫暖的話","cta":"文章結尾引流2-4句自然不銷售","email_subject":"歡迎信主旨帶{{ subscriber.first_name }}","email_body":"歡迎信正文以{{ subscriber.first_name }}你好開頭溫暖真實像朋友說話署名藍方"}`;
+  const prompt=`你是一個專門幫助療癒師、諮商師設計內容行銷的專家。分析以下文章，生成「${lead}」的 Landing Page 文案、文章結尾 CTA 及 Kit 歡迎信。文章：\n${article}\n\n只回 JSON 不要其他文字：{"page_title":"SEO標題60字內","og_desc":"社群描述80字內","t1":"主標題第一行8字內","t2":"斜體第二行6字內","sub":"副標題一句話20字內","quote":"文章最打動人的一句原文","cite":"這句話的來源說明","gets":[{"icon":"emoji","name":"名稱","desc":"說明25字內"},{"icon":"emoji","name":"名稱","desc":"說明25字內"},{"icon":"emoji","name":"名稱","desc":"說明25字內"}],"form_title":"表單標題15字內","form_note":"表單說明一句話","btn":"按鈕文字10字內結尾加→","success_t1":"成功標題第一部分","success_em":"斜體強調詞","success_body":"成功後三行內溫暖的話","cta":"文章結尾引流2-4句自然不銷售","email_subject":"歡迎信主旨帶{{ subscriber.first_name }}","email_body":"歡迎信正文以{{ subscriber.first_name }}你好開頭溫暖真實像朋友說話署名藍方","confirm_btn":"Kit確認信按鈕文字，呼應引流品主題，有溫度有行動感，10字內，不要用確認訂閱"}`;
   try{
     const res=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
@@ -196,7 +196,7 @@ async function runAI(){
     if(!res.ok||data.error)throw new Error(data.error?.message||'API 錯誤 '+res.status);
     const r=JSON.parse(data.content[0].text.replace(/```json|```/g,'').trim());
     pageData={...r,kitId,name:'許藍方',title:'希塔療癒導師・關係靈氣療癒師'};
-    document.getElementById('landing-text').innerHTML=`<div class="frr"><div class="fkey">主標題</div><div class="fval">${r.t1} / <em>${r.t2}</em></div></div><div class="frr"><div class="fkey">副標題</div><div class="fval">${r.sub}</div></div><div class="frr"><div class="fkey">金句</div><div class="fval">「${r.quote}」</div></div><div class="frr"><div class="fkey">賣點</div><div class="fval">${r.gets.map(g=>`${g.icon} ${g.name}：${g.desc}`).join('<br>')}</div></div><div class="frr"><div class="fkey">按鈕</div><div class="fval">${r.btn}</div></div>`;
+    document.getElementById('landing-text').innerHTML=`<div class="frr"><div class="fkey">主標題</div><div class="fval">${r.t1} / <em>${r.t2}</em></div></div><div class="frr"><div class="fkey">副標題</div><div class="fval">${r.sub}</div></div><div class="frr"><div class="fkey">金句</div><div class="fval">「${r.quote}」</div></div><div class="frr"><div class="fkey">賣點</div><div class="fval">${r.gets.map(g=>`${g.icon} ${g.name}：${g.desc}`).join('<br>')}</div></div><div class="frr"><div class="fkey">按鈕</div><div class="fval">${r.btn}</div></div><div class="frr"><div class="fkey">Kit 確認信按鈕</div><div class="fval" id="confirm-btn-text">${r.confirm_btn}</div></div>`;
     document.getElementById('cta-text').textContent=r.cta;
     document.getElementById('email-subject').textContent=r.email_subject;
     document.getElementById('email-body').textContent=r.email_body;
