@@ -7,516 +7,354 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #FBF7F2;
-  --bg2: #F4EDE0;
-  --ink: #2A1A0A;
-  --ink-mid: #5C3D1E;
-  --terracotta: #B85C38;
-  --gold: #B8873A;
-  --muted: #9C7A55;
-  --faint: #C4A882;
-  --border: #E2D4C0;
-  --green: #5A8A6A;
-}
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-body { background: var(--bg); color: var(--ink); font-family: 'Noto Serif TC', serif; font-weight: 300; min-height: 100vh; }
-.wrap { max-width: 760px; margin: 0 auto; padding: 0 24px 80px; }
-
-header { padding: 40px 0 32px; border-bottom: 1px solid var(--border); margin-bottom: 40px; }
-.header-inner { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
-.logo { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 18px; color: var(--muted); }
-.header-tag { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--faint); }
-
-h1 { font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: clamp(28px, 5vw, 40px); color: var(--ink); margin-bottom: 8px; line-height: 1.3; }
-h1 em { font-style: italic; color: var(--terracotta); }
-.page-sub { font-size: 14px; color: var(--muted); line-height: 1.8; margin-bottom: 36px; }
-
-/* Input section */
-.input-section { margin-bottom: 32px; }
-.section-label { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; display: block; }
-
-.article-input {
-  width: 100%; min-height: 200px; padding: 16px 18px;
-  border: 1.5px solid var(--border); background: white;
-  font-family: 'Noto Serif TC', serif; font-size: 14px; color: var(--ink);
-  line-height: 1.8; resize: vertical; outline: none; transition: border-color 0.2s;
-}
-.article-input:focus { border-color: var(--terracotta); }
-.article-input::placeholder { color: var(--faint); }
-
-.options-row { display: flex; gap: 12px; margin-top: 12px; flex-wrap: wrap; }
-.opt-field { flex: 1; min-width: 180px; }
-.opt-field label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 6px; letter-spacing: 0.05em; }
-.opt-field input {
-  width: 100%; padding: 11px 14px; border: 1.5px solid var(--border);
-  background: var(--bg); font-family: 'Noto Serif TC', serif; font-size: 14px;
-  color: var(--ink); outline: none; transition: border-color 0.2s;
-}
-.opt-field input:focus { border-color: var(--terracotta); }
-.opt-field input::placeholder { color: var(--faint); }
-
-.generate-btn {
-  width: 100%; margin-top: 20px; padding: 17px;
-  background: var(--ink); color: white; border: none;
-  font-family: 'Noto Serif TC', serif; font-size: 15px; letter-spacing: 0.06em;
-  cursor: pointer; transition: background 0.3s; position: relative;
-}
-.generate-btn:hover:not(:disabled) { background: var(--terracotta); }
-.generate-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-
-.loading-dots { display: inline-block; }
-.loading-dots::after {
-  content: '';
-  animation: dots 1.2s infinite;
-}
-@keyframes dots {
-  0%   { content: ''; }
-  25%  { content: '．'; }
-  50%  { content: '．．'; }
-  75%  { content: '．．．'; }
-}
-
-/* Results */
-.results { display: none; }
-.results.visible { display: block; animation: fadeUp 0.5s ease; }
-
-.result-card {
-  background: white; border: 1px solid var(--border);
-  margin-bottom: 20px; position: relative;
-  box-shadow: 0 1px 12px rgba(90,50,20,0.05);
-}
-.result-card::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0;
-  height: 2px; background: linear-gradient(90deg, var(--terracotta), var(--gold));
-}
-.card-header {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 16px 20px 12px; border-bottom: 1px solid var(--border);
-}
-.card-title { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); }
-.copy-btn {
-  font-size: 11px; letter-spacing: 0.1em; color: var(--muted);
-  background: none; border: 1px solid var(--border); padding: 5px 12px;
-  cursor: pointer; font-family: 'Noto Serif TC', serif; transition: all 0.2s;
-}
-.copy-btn:hover { border-color: var(--terracotta); color: var(--terracotta); }
-.copy-btn.copied { border-color: var(--green); color: var(--green); }
-
-.card-body { padding: 20px; }
-.output-text {
-  font-size: 14px; line-height: 1.9; color: var(--ink-mid);
-  white-space: pre-wrap; word-break: break-word;
-}
-
-/* Field rows in result */
-.field-row { margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
-.field-row:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
-.field-key { font-size: 11px; letter-spacing: 0.12em; color: var(--faint); margin-bottom: 6px; text-transform: uppercase; }
-.field-val { font-size: 15px; color: var(--ink); line-height: 1.7; font-family: 'Cormorant Garamond', serif; font-size: 17px; }
-
-/* Generate HTML button */
-.generate-html-btn {
-  width: 100%; padding: 15px; margin-top: 8px;
-  background: var(--bg2); color: var(--ink); border: 1.5px solid var(--border);
-  font-family: 'Noto Serif TC', serif; font-size: 14px; letter-spacing: 0.06em;
-  cursor: pointer; transition: all 0.3s;
-}
-.generate-html-btn:hover { background: var(--terracotta); color: white; border-color: var(--terracotta); }
-
-@keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-
-@media (max-width: 480px) { .options-row { flex-direction: column; } }
+:root{--bg:#FBF7F2;--bg2:#F4EDE0;--ink:#2A1A0A;--ink-mid:#5C3D1E;--terracotta:#B85C38;--gold:#B8873A;--muted:#9C7A55;--faint:#C4A882;--border:#E2D4C0;--green:#5A8A6A}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:'Noto Serif TC',serif;font-weight:300;min-height:100vh}
+.wrap{max-width:680px;margin:0 auto;padding:0 24px 80px}
+header{padding:36px 0 24px;border-bottom:1px solid var(--border);margin-bottom:32px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.logo{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;color:var(--muted)}
+.header-tag{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--faint)}
+h1{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(24px,5vw,36px);color:var(--ink);margin-bottom:8px;line-height:1.3}
+h1 em{font-style:italic;color:var(--terracotta)}
+.page-sub{font-size:13px;color:var(--muted);line-height:1.85;margin-bottom:28px}
+.mode-tabs{display:flex;margin-bottom:28px;border:1.5px solid var(--border);overflow:hidden}
+.mode-tab{flex:1;padding:13px 16px;text-align:center;font-size:13px;cursor:pointer;transition:all .25s;background:white;color:var(--muted);border:none;font-family:'Noto Serif TC',serif;letter-spacing:.04em}
+.mode-tab:first-child{border-right:1px solid var(--border)}
+.mode-tab.active{background:var(--ink);color:white}
+.mode-panel{display:none}
+.mode-panel.active{display:block}
+.section{margin-bottom:24px}
+.section-label{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;display:block}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px}
+.field input,.field textarea{width:100%;padding:11px 14px;border:1.5px solid var(--border);background:white;font-family:'Noto Serif TC',serif;font-size:14px;color:var(--ink);outline:none;transition:border-color .2s;resize:vertical}
+.field input:focus,.field textarea:focus{border-color:var(--terracotta)}
+.field input::placeholder,.field textarea::placeholder{color:var(--faint)}
+.field-row{display:flex;gap:10px}
+.field-row .field{flex:1}
+.get-row{display:grid;grid-template-columns:48px 1fr 2fr;gap:8px;margin-bottom:8px;align-items:start}
+.generate-btn{width:100%;padding:16px;background:var(--ink);color:white;border:none;font-family:'Noto Serif TC',serif;font-size:14px;letter-spacing:.06em;cursor:pointer;transition:background .3s;margin-top:4px}
+.generate-btn:hover:not(:disabled){background:var(--terracotta)}
+.generate-btn:disabled{opacity:.55;cursor:not-allowed}
+.results{display:none;margin-top:32px}
+.results.visible{display:block;animation:fadeUp .4s ease}
+.result-card{background:white;border:1px solid var(--border);margin-bottom:14px;position:relative;box-shadow:0 1px 10px rgba(90,50,20,.05)}
+.result-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--terracotta),var(--gold))}
+.card-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px 10px;border-bottom:1px solid var(--border)}
+.card-title{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+.copy-btn{font-size:11px;color:var(--muted);background:none;border:1px solid var(--border);padding:4px 10px;cursor:pointer;font-family:'Noto Serif TC',serif;transition:all .2s}
+.copy-btn:hover{border-color:var(--terracotta);color:var(--terracotta)}
+.copy-btn.copied{border-color:var(--green);color:var(--green)}
+.card-body{padding:16px}
+.frr{margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+.frr:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
+.fkey{font-size:11px;letter-spacing:.1em;color:var(--faint);margin-bottom:5px;text-transform:uppercase}
+.fval{font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--ink);line-height:1.6}
+.otext{font-size:13px;line-height:1.9;color:var(--ink-mid);white-space:pre-wrap;word-break:break-word}
+.download-btn{width:100%;padding:15px;background:var(--terracotta);color:white;border:none;font-family:'Noto Serif TC',serif;font-size:14px;letter-spacing:.06em;cursor:pointer;transition:background .3s;margin-top:6px}
+.download-btn:hover{background:var(--ink)}
+.loading::after{content:'';animation:dots 1.2s infinite}
+@keyframes dots{0%{content:''}33%{content:'．'}66%{content:'．．'}100%{content:'．．．'}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:500px){.field-row{flex-direction:column}.get-row{grid-template-columns:40px 1fr}.get-row .field:last-child{grid-column:1/-1}}
 </style>
 </head>
 <body>
 <div class="wrap">
+<header>
+  <div class="logo">許藍方・內容工具箱</div>
+  <div class="header-tag">Landing Page 生成器</div>
+</header>
+<h1>一鍵生成<br><em>Landing Page</em></h1>
+<p class="page-sub">貼文章讓 AI 自動分析，或直接手動填空——兩種模式，產出完整 HTML 直接上傳用。</p>
 
-  <header>
-    <div class="header-inner">
-      <div class="logo">許藍方・內容工具箱</div>
-      <div class="header-tag">Landing Page 生成器</div>
+<div class="mode-tabs">
+  <button class="mode-tab active" onclick="switchMode('ai')">🤖 AI 自動分析</button>
+  <button class="mode-tab" onclick="switchMode('manual')">✏️ 手動填空</button>
+</div>
+
+<!-- AI 模式 -->
+<div class="mode-panel active" id="panel-ai">
+  <div class="section">
+    <span class="section-label">設定</span>
+    <div class="field-row">
+      <div class="field"><label>引流品名稱</label><input type="text" id="ai-lead" placeholder="例如：約會溺水對照表"></div>
+      <div class="field"><label>Kit 表單 ID</label><input type="text" id="ai-kit" placeholder="例如：9141329"></div>
     </div>
-  </header>
-
-  <h1>貼文章，<em>自動生成</em><br>Landing Page 文案</h1>
-  <p class="page-sub">把你的文章貼進來，AI 會幫你分析出：頁面標題、金句、賣點、按鈕文字，還有文章結尾的引流 CTA。</p>
-
-  <div class="input-section">
-    <span class="section-label">貼入你的文章</span>
-    <textarea class="article-input" id="article-input" placeholder="把你的文章全文貼在這裡⋯⋯"></textarea>
-
-    <div class="options-row">
-      <div class="opt-field">
-        <label>引流品名稱（例如：關係檢核表）</label>
-        <input type="text" id="lead-magnet" placeholder="例如：關係檢核表、靈氣冥想音頻">
-      </div>
-      <div class="opt-field">
-        <label>Kit 表單 ID</label>
-        <input type="text" id="kit-id" placeholder="例如：9141183" value="9141183">
-      </div>
-    </div>
-    <div class="options-row" style="margin-top:0">
-      <div class="opt-field" style="flex:2">
-        <label>Anthropic API Key（只存在你的瀏覽器，不會外傳）</label>
-        <input type="password" id="api-key" placeholder="sk-ant-...">
-      </div>
-    </div>
-
-    <button class="generate-btn" id="generate-btn" onclick="generate()">
-      開始分析並生成文案
-    </button>
+    <div class="field"><label>Anthropic API Key（只存在瀏覽器，不會外傳）</label><input type="password" id="ai-key" placeholder="sk-ant-..."></div>
   </div>
-
-  <div class="results" id="results">
-
-    <!-- Landing Page 文案 -->
-    <div class="result-card" id="card-landing">
-      <div class="card-header">
-        <div class="card-title">Landing Page 文案</div>
-        <button class="copy-btn" onclick="copyCard('landing-content', this)">複製</button>
-      </div>
-      <div class="card-body" id="landing-content"></div>
-    </div>
-
-    <!-- 文章結尾 CTA -->
-    <div class="result-card" id="card-cta">
-      <div class="card-header">
-        <div class="card-title">文章結尾引流 CTA</div>
-        <button class="copy-btn" onclick="copyCard('cta-content', this)">複製</button>
-      </div>
-      <div class="card-body">
-        <div class="output-text" id="cta-content"></div>
-      </div>
-    </div>
-
-    <!-- 歡迎信 -->
-    <div class="result-card" id="card-email">
-      <div class="card-header">
-        <div class="card-title">Kit 歡迎信文案</div>
-        <button class="copy-btn" onclick="copyEmail(this)">複製</button>
-      </div>
-      <div class="card-body">
-        <div class="field-row">
-          <div class="field-key">主旨</div>
-          <div class="field-val" id="email-subject"></div>
-        </div>
-        <div class="field-row" style="border-bottom:none;padding-bottom:0">
-          <div class="field-key">正文</div>
-          <div class="output-text" id="email-body" style="font-family:Noto Serif TC,serif;font-size:14px"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 生成完整 HTML -->
-    <button class="generate-html-btn" id="html-btn" onclick="generateHTML()" style="display:none">
-      → 用這些內容生成完整的 Landing Page HTML
-    </button>
-
+  <div class="section">
+    <span class="section-label">貼入文章</span>
+    <div class="field"><textarea id="ai-article" style="min-height:180px" placeholder="把你的文章全文貼在這裡⋯⋯"></textarea></div>
   </div>
+  <button class="generate-btn" id="ai-btn" onclick="runAI()">開始分析並生成文案</button>
+</div>
 
+<!-- 手動模式 -->
+<div class="mode-panel" id="panel-manual">
+  <div class="section">
+    <span class="section-label">基本設定</span>
+    <div class="field-row">
+      <div class="field"><label>你的名字</label><input type="text" id="m-name" value="許藍方"></div>
+      <div class="field"><label>Kit 表單 ID</label><input type="text" id="m-kit" placeholder="例如：9141329"></div>
+    </div>
+    <div class="field"><label>身份</label><input type="text" id="m-title" value="希塔療癒導師・關係靈氣療癒師"></div>
+  </div>
+  <div class="section">
+    <span class="section-label">頁面文案</span>
+    <div class="field-row">
+      <div class="field"><label>主標題第一行</label><input type="text" id="m-t1" placeholder="例如：你在關係裡"></div>
+      <div class="field"><label>斜體第二行（紅色）</label><input type="text" id="m-t2" placeholder="例如：溺水了嗎？"></div>
+    </div>
+    <div class="field"><label>副標題</label><input type="text" id="m-sub" placeholder="例如：12 題對照表，幫你看清楚你在關係裡的位置"></div>
+    <div class="field"><label>金句</label><textarea id="m-quote" style="min-height:70px" placeholder="引用文章裡最打動人的一句話"></textarea></div>
+    <div class="field"><label>金句來源說明</label><input type="text" id="m-cite" placeholder="例如：約會溺水風險對照表"></div>
+  </div>
+  <div class="section">
+    <span class="section-label">你會收到（三項）</span>
+    <div class="get-row">
+      <div class="field"><label>圖示</label><input type="text" id="g1i" placeholder="💗"></div>
+      <div class="field"><label>名稱</label><input type="text" id="g1n" placeholder="項目一名稱"></div>
+      <div class="field"><label>說明</label><input type="text" id="g1d" placeholder="一句說明"></div>
+    </div>
+    <div class="get-row">
+      <div class="field"><label>圖示</label><input type="text" id="g2i" placeholder="🧭"></div>
+      <div class="field"><label>名稱</label><input type="text" id="g2n" placeholder="項目二名稱"></div>
+      <div class="field"><label>說明</label><input type="text" id="g2d" placeholder="一句說明"></div>
+    </div>
+    <div class="get-row">
+      <div class="field"><label>圖示</label><input type="text" id="g3i" placeholder="📩"></div>
+      <div class="field"><label>名稱</label><input type="text" id="g3n" placeholder="項目三名稱"></div>
+      <div class="field"><label>說明</label><input type="text" id="g3d" placeholder="一句說明"></div>
+    </div>
+  </div>
+  <div class="section">
+    <span class="section-label">表單</span>
+    <div class="field-row">
+      <div class="field"><label>表單標題</label><input type="text" id="m-ftitle" placeholder="免費領取對照表"></div>
+      <div class="field"><label>按鈕文字</label><input type="text" id="m-btn" placeholder="我不想再溺水了 →"></div>
+    </div>
+  </div>
+  <button class="generate-btn" onclick="runManual()">生成 Landing Page HTML</button>
+</div>
+
+<!-- 結果 -->
+<div class="results" id="results">
+  <div class="result-card" id="card-landing" style="display:none">
+    <div class="card-header"><div class="card-title">Landing Page 文案</div><button class="copy-btn" onclick="copyEl('landing-text',this)">複製</button></div>
+    <div class="card-body" id="landing-text"></div>
+  </div>
+  <div class="result-card" id="card-cta" style="display:none">
+    <div class="card-header"><div class="card-title">文章結尾 CTA</div><button class="copy-btn" onclick="copyEl('cta-text',this)">複製</button></div>
+    <div class="card-body"><div class="otext" id="cta-text"></div></div>
+  </div>
+  <div class="result-card" id="card-email" style="display:none">
+    <div class="card-header"><div class="card-title">Kit 歡迎信文案</div><button class="copy-btn" onclick="copyEmail(this)">複製</button></div>
+    <div class="card-body">
+      <div class="frr"><div class="fkey">主旨</div><div class="fval" id="email-subject"></div></div>
+      <div class="frr"><div class="fkey">正文</div><div class="otext" id="email-body"></div></div>
+    </div>
+  </div>
+  <button class="download-btn" id="dl-btn" style="display:none" onclick="downloadHTML()">→ 下載完整 Landing Page HTML</button>
+</div>
 </div>
 
 <script>
-let generatedData = null;
+let pageData=null;
 
-async function generate() {
-  const article = document.getElementById('article-input').value.trim();
-  const leadMagnet = document.getElementById('lead-magnet').value.trim() || '免費資源';
-  const kitId = document.getElementById('kit-id').value.trim() || 'YOUR_KIT_ID';
+function switchMode(m){
+  document.querySelectorAll('.mode-tab').forEach((t,i)=>t.classList.toggle('active',(m==='ai'&&i===0)||(m==='manual'&&i===1)));
+  document.getElementById('panel-ai').classList.toggle('active',m==='ai');
+  document.getElementById('panel-manual').classList.toggle('active',m==='manual');
+}
 
-  if (!article) {
-    alert('請先貼入文章內容');
-    return;
-  }
-
-  const btn = document.getElementById('generate-btn');
-  btn.innerHTML = '<span class="loading-dots">AI 分析中</span>';
-  btn.disabled = true;
-
-  const prompt = `你是一個專門幫助療癒師、諮商師設計內容行銷的專家。
-
-請分析以下文章，幫我生成一個「${leadMagnet}」的 Landing Page 所需的所有文案，以及文章結尾的引流 CTA。
-
-文章內容：
-${article}
-
-請用繁體中文，以 JSON 格式回應，結構如下（只回 JSON，不要有其他文字）：
-{
-  "page_title": "SEO 標題，60字內",
-  "og_description": "社群預覽描述，80字內",
-  "hero_title_line1": "主標題第一行，有力有感覺，8字內",
-  "hero_title_line2": "主標題第二行，斜體關鍵詞，6字內",
-  "hero_sub": "副標題，一句話，20字內",
-  "pull_quote": "從文章裡萃取出最打動人心的一句話，直接引用原文",
-  "pull_cite": "這句話出自哪裡的說明，例如「大人版關係檢核表」",
-  "gets": [
-    {"icon": "emoji", "name": "項目名稱", "desc": "一句說明，25字內"},
-    {"icon": "emoji", "name": "項目名稱", "desc": "一句說明，25字內"},
-    {"icon": "emoji", "name": "項目名稱", "desc": "一句說明，25字內"}
-  ],
-  "form_title": "表單標題，「免費領取⋯⋯」，15字內",
-  "form_note": "表單說明，一句話",
-  "button_text": "按鈕文字，有溫度、有行動感，10字內，結尾加 →",
-  "success_title_line1": "成功頁面標題第一部分",
-  "success_title_em": "斜體強調詞",
-  "success_body": "成功後的一段話，溫暖、簡短，三行內",
-  "article_cta": "放在文章結尾的引流段落，2-4句，呼應文章內容，自然帶出引流品，最後請讀者留言或私訊，不要太銷售感，要像一個真實的人在說話",
-  "email_subject": "歡迎信主旨，有溫度，結尾加上對方名字：{{ subscriber.first_name }}",
-  "email_body": "歡迎信正文，以 {{ subscriber.first_name }}，你好開頭，2-3句暖場呼應文章，說明這份檢核表怎麼用（不需要一次全部，哪題停下來就停那裡），結尾邀請對方回信說說停在哪一題，署名藍方，語氣溫暖真實像朋友說話"
-}`;
-
-  try {
-    const apiKey = document.getElementById('api-key').value.trim();
-    if (!apiKey) { alert('請填入 Anthropic API Key'); btn.innerHTML = '重新生成'; btn.disabled = false; return; }
-
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 2000,
-        messages: [{ role: 'user', content: prompt }]
-      })
+async function runAI(){
+  const article=document.getElementById('ai-article').value.trim();
+  const lead=document.getElementById('ai-lead').value.trim()||'免費資源';
+  const kitId=document.getElementById('ai-kit').value.trim();
+  const apiKey=document.getElementById('ai-key').value.trim();
+  if(!article)return alert('請先貼入文章內容');
+  if(!apiKey)return alert('請填入 Anthropic API Key');
+  const btn=document.getElementById('ai-btn');
+  btn.innerHTML='<span class="loading">AI 分析中</span>';
+  btn.disabled=true;
+  const prompt=`你是一個專門幫助療癒師、諮商師設計內容行銷的專家。分析以下文章，生成「${lead}」的 Landing Page 文案、文章結尾 CTA 及 Kit 歡迎信。文章：\n${article}\n\n只回 JSON 不要其他文字：{"page_title":"SEO標題60字內","og_desc":"社群描述80字內","t1":"主標題第一行8字內","t2":"斜體第二行6字內","sub":"副標題一句話20字內","quote":"文章最打動人的一句原文","cite":"這句話的來源說明","gets":[{"icon":"emoji","name":"名稱","desc":"說明25字內"},{"icon":"emoji","name":"名稱","desc":"說明25字內"},{"icon":"emoji","name":"名稱","desc":"說明25字內"}],"form_title":"表單標題15字內","form_note":"表單說明一句話","btn":"按鈕文字10字內結尾加→","success_t1":"成功標題第一部分","success_em":"斜體強調詞","success_body":"成功後三行內溫暖的話","cta":"文章結尾引流2-4句自然不銷售","email_subject":"歡迎信主旨帶{{ subscriber.first_name }}","email_body":"歡迎信正文以{{ subscriber.first_name }}你好開頭溫暖真實像朋友說話署名藍方"}`;
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,messages:[{role:'user',content:prompt}]})
     });
-
-    const data = await response.json();
-    if (!response.ok || data.error) {
-      throw new Error(data.error?.message || 'API 回應錯誤：' + response.status);
-    }
-    const text = data.content[0].text;
-    const clean = text.replace(/```json|```/g, '').trim();
-    const result = JSON.parse(clean);
-
-    generatedData = { ...result, kitId, leadMagnet };
-    renderResults(result, kitId);
-
-  } catch(err) {
-    alert('生成失敗：' + (err.message || '請確認 API Key 是否正確，並重試'));
-    console.error(err);
-  }
-
-  btn.innerHTML = '重新生成';
-  btn.disabled = false;
+    const data=await res.json();
+    if(!res.ok||data.error)throw new Error(data.error?.message||'API 錯誤 '+res.status);
+    const r=JSON.parse(data.content[0].text.replace(/```json|```/g,'').trim());
+    pageData={...r,kitId,name:'許藍方',title:'希塔療癒導師・關係靈氣療癒師'};
+    document.getElementById('landing-text').innerHTML=`<div class="frr"><div class="fkey">主標題</div><div class="fval">${r.t1} / <em>${r.t2}</em></div></div><div class="frr"><div class="fkey">副標題</div><div class="fval">${r.sub}</div></div><div class="frr"><div class="fkey">金句</div><div class="fval">「${r.quote}」</div></div><div class="frr"><div class="fkey">賣點</div><div class="fval">${r.gets.map(g=>`${g.icon} ${g.name}：${g.desc}`).join('<br>')}</div></div><div class="frr"><div class="fkey">按鈕</div><div class="fval">${r.btn}</div></div>`;
+    document.getElementById('cta-text').textContent=r.cta;
+    document.getElementById('email-subject').textContent=r.email_subject;
+    document.getElementById('email-body').textContent=r.email_body;
+    ['card-landing','card-cta','card-email'].forEach(id=>document.getElementById(id).style.display='block');
+    document.getElementById('dl-btn').style.display='block';
+    document.getElementById('results').classList.add('visible');
+    document.getElementById('results').scrollIntoView({behavior:'smooth',block:'start'});
+  }catch(err){alert('生成失敗：'+err.message);console.error(err);}
+  btn.innerHTML='重新分析';btn.disabled=false;
 }
 
-function renderResults(r, kitId) {
-  // Landing page fields
-  const landingHTML = `
-    <div class="field-row">
-      <div class="field-key">頁面標題</div>
-      <div class="field-val">${r.page_title}</div>
-    </div>
-    <div class="field-row">
-      <div class="field-key">社群預覽描述（OG）</div>
-      <div class="field-val">${r.og_description}</div>
-    </div>
-    <div class="field-row">
-      <div class="field-key">主標題</div>
-      <div class="field-val">${r.hero_title_line1}<br><em>${r.hero_title_line2}</em></div>
-    </div>
-    <div class="field-row">
-      <div class="field-key">副標題</div>
-      <div class="field-val">${r.hero_sub}</div>
-    </div>
-    <div class="field-row">
-      <div class="field-key">金句</div>
-      <div class="field-val">「${r.pull_quote}」<br><small style="font-size:12px;color:var(--faint)">—— ${r.pull_cite}</small></div>
-    </div>
-    <div class="field-row">
-      <div class="field-key">你會收到（三項）</div>
-      <div class="field-val">${r.gets.map((g,i) => `${g.icon} ${g.name}：${g.desc}`).join('<br>')}</div>
-    </div>
-    <div class="field-row">
-      <div class="field-key">表單標題</div>
-      <div class="field-val">${r.form_title}</div>
-    </div>
-    <div class="field-row">
-      <div class="field-key">按鈕文字</div>
-      <div class="field-val">${r.button_text}</div>
-    </div>
-    <div class="field-row">
-      <div class="field-key">Kit 表單 ID</div>
-      <div class="field-val">${kitId}</div>
-    </div>
-  `;
-
-  document.getElementById('landing-content').innerHTML = landingHTML;
-  document.getElementById('cta-content').textContent = r.article_cta;
-
+function runManual(){
+  const r={
+    t1:document.getElementById('m-t1').value||'主標題',
+    t2:document.getElementById('m-t2').value||'副標題',
+    sub:document.getElementById('m-sub').value,
+    quote:document.getElementById('m-quote').value,
+    cite:document.getElementById('m-cite').value,
+    gets:[
+      {icon:document.getElementById('g1i').value||'💗',name:document.getElementById('g1n').value,desc:document.getElementById('g1d').value},
+      {icon:document.getElementById('g2i').value||'🧭',name:document.getElementById('g2n').value,desc:document.getElementById('g2d').value},
+      {icon:document.getElementById('g3i').value||'📩',name:document.getElementById('g3n').value,desc:document.getElementById('g3d').value},
+    ],
+    form_title:document.getElementById('m-ftitle').value||'免費領取',
+    form_note:'輸入你的資訊，我馬上寄給你',
+    btn:document.getElementById('m-btn').value||'我準備好了 →',
+    success_t1:'收到了',success_em:'寄出了',
+    success_body:'去信箱找找吧。\n不需要一次全部回答——\n哪一題讓你停下來，就停在那裡。',
+    page_title:(document.getElementById('m-t1').value||'')+(document.getElementById('m-t2').value||'')+'｜許藍方',
+    og_desc:document.getElementById('m-sub').value,
+  };
+  pageData={...r,kitId:document.getElementById('m-kit').value,name:document.getElementById('m-name').value,title:document.getElementById('m-title').value};
+  ['card-landing','card-cta','card-email'].forEach(id=>document.getElementById(id).style.display='none');
+  document.getElementById('dl-btn').style.display='block';
   document.getElementById('results').classList.add('visible');
-  // email
-  document.getElementById('email-subject').textContent = r.email_subject || '';
-  document.getElementById('email-body').textContent = r.email_body || '';
-  document.getElementById('html-btn').style.display = 'block';
-
-  document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  document.getElementById('results').scrollIntoView({behavior:'smooth',block:'start'});
 }
 
-async function generateHTML() {
-  if (!generatedData) return;
-  const r = generatedData;
-  const kitId = r.kitId;
-
-  const html = `<!DOCTYPE html>
+function downloadHTML(){
+  if(!pageData)return;
+  const d=pageData;
+  const html=`<!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>${r.page_title}</title>
-<meta name="description" content="${r.og_description}">
-<meta property="og:title" content="${r.page_title}">
-<meta property="og:description" content="${r.og_description}">
-<meta property="og:type" content="website">
-<meta property="og:locale" content="zh_TW">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${d.page_title||''}</title>
+<meta name="description" content="${d.og_desc||''}">
+<meta property="og:title" content="${d.page_title||''}">
+<meta property="og:description" content="${d.og_desc||''}">
+<meta property="og:type" content="website"><meta property="og:locale" content="zh_TW">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #FBF7F2; --bg2: #F4EDE0; --ink: #2A1A0A; --ink-mid: #5C3D1E;
-  --terracotta: #B85C38; --gold: #B8873A; --muted: #9C7A55; --faint: #C4A882; --border: #E2D4C0;
-}
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-body { background: var(--bg); color: var(--ink); font-family: 'Noto Serif TC', serif; font-weight: 300; overflow-x: hidden; }
-.wrap { max-width: 600px; margin: 0 auto; padding: 0 28px; }
-header { padding: 40px 0 0; opacity: 0; animation: up 0.7s 0.1s ease forwards; }
-.site-tag { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 13px; letter-spacing: 0.12em; color: var(--muted); }
-.hero { padding: 52px 0 44px; }
-.hero-label { display: inline-flex; align-items: center; gap: 10px; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--terracotta); margin-bottom: 28px; opacity: 0; animation: up 0.7s 0.2s ease forwards; }
-.hero-label::before { content: ''; display: block; width: 24px; height: 1px; background: var(--terracotta); }
-h1 { font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: clamp(38px, 8vw, 60px); line-height: 1.2; color: var(--ink); margin-bottom: 10px; opacity: 0; animation: up 0.7s 0.3s ease forwards; }
-h1 em { font-style: italic; color: var(--terracotta); }
-.hero-sub { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(16px, 3vw, 20px); color: var(--muted); margin-bottom: 36px; line-height: 1.6; opacity: 0; animation: up 0.7s 0.4s ease forwards; }
-.pull { border-left: 2px solid var(--terracotta); padding: 18px 22px; margin-bottom: 48px; background: var(--bg2); opacity: 0; animation: up 0.7s 0.5s ease forwards; }
-.pull p { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(16px, 3vw, 20px); line-height: 1.8; color: var(--ink-mid); }
-.pull cite { display: block; margin-top: 10px; font-size: 12px; letter-spacing: 0.1em; color: var(--faint); font-style: normal; }
-.gets { margin-bottom: 48px; opacity: 0; animation: up 0.7s 0.55s ease forwards; }
-.gets-title { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
-.get-item { display: flex; gap: 18px; padding: 18px 0; border-bottom: 1px solid var(--border); }
-.get-item:first-of-type { border-top: 1px solid var(--border); }
-.get-icon { font-size: 22px; flex-shrink: 0; padding-top: 2px; }
-.get-name { font-size: 15px; color: var(--ink); margin-bottom: 4px; }
-.get-desc { font-size: 13px; color: var(--muted); line-height: 1.8; }
-.form-box { background: white; border: 1px solid var(--border); padding: 40px 36px; margin-bottom: 60px; opacity: 0; animation: up 0.7s 0.65s ease forwards; position: relative; overflow: hidden; box-shadow: 0 2px 20px rgba(90,50,20,0.06); }
-.form-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--terracotta), var(--gold)); }
-.form-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(20px, 4vw, 26px); font-weight: 400; color: var(--ink); margin-bottom: 6px; line-height: 1.4; }
-.form-note { font-size: 13px; color: var(--muted); margin-bottom: 28px; line-height: 1.85; }
-.field { margin-bottom: 12px; }
-.field label { display: block; font-size: 12px; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 6px; }
-.field input { display: block; width: 100%; padding: 13px 16px; border: 1.5px solid var(--border); background: var(--bg); font-family: 'Noto Serif TC', serif; font-size: 15px; color: var(--ink); outline: none; transition: border-color 0.2s; }
-.field input:focus { border-color: var(--terracotta); }
-.field input::placeholder { color: var(--faint); }
-.submit-btn { display: block; width: 100%; margin-top: 16px; padding: 16px; background: var(--ink); color: white; border: none; font-family: 'Noto Serif TC', serif; font-size: 15px; letter-spacing: 0.06em; cursor: pointer; transition: background 0.3s; }
-.submit-btn:hover { background: var(--terracotta); }
-.privacy { margin-top: 14px; font-size: 11px; color: var(--faint); text-align: center; letter-spacing: 0.05em; }
-.success { display: none; text-align: center; padding: 12px 0; }
-.success-icon { font-size: 40px; margin-bottom: 20px; }
-.success-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(24px, 5vw, 34px); font-weight: 400; color: var(--ink); margin-bottom: 16px; line-height: 1.4; }
-.success-title em { font-style: italic; color: var(--terracotta); }
-.success-body { font-size: 14px; color: var(--ink-mid); line-height: 1.95; margin-bottom: 20px; }
-.success-note { font-size: 12px; color: var(--faint); line-height: 1.8; padding: 14px 18px; border: 1px solid var(--border); }
-footer { padding: 32px 0 52px; border-top: 1px solid var(--border); opacity: 0; animation: up 0.7s 0.75s ease forwards; }
-.footer-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
-.footer-name { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 15px; color: var(--muted); }
-.footer-note { font-size: 11px; color: var(--faint); line-height: 1.8; text-align: right; }
-@keyframes up { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@media (max-width: 480px) { .form-box { padding: 28px 20px; } .footer-inner { flex-direction: column; align-items: flex-start; } .footer-note { text-align: left; } }
+:root{--bg:#FBF7F2;--bg2:#F4EDE0;--ink:#2A1A0A;--ink-mid:#5C3D1E;--terracotta:#B85C38;--gold:#B8873A;--muted:#9C7A55;--faint:#C4A882;--border:#E2D4C0}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:'Noto Serif TC',serif;font-weight:300;overflow-x:hidden}
+.wrap{max-width:600px;margin:0 auto;padding:0 28px}
+header{padding:40px 0 0;opacity:0;animation:up 0.7s 0.1s ease forwards}
+.site-tag{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;letter-spacing:.12em;color:var(--muted)}
+.hero{padding:52px 0 44px}
+.hero-label{display:inline-flex;align-items:center;gap:10px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--terracotta);margin-bottom:28px;opacity:0;animation:up 0.7s 0.2s ease forwards}
+.hero-label::before{content:'';display:block;width:24px;height:1px;background:var(--terracotta)}
+h1{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(38px,8vw,60px);line-height:1.2;color:var(--ink);margin-bottom:10px;opacity:0;animation:up 0.7s 0.3s ease forwards}
+h1 em{font-style:italic;color:var(--terracotta)}
+.hero-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(16px,3vw,20px);color:var(--muted);margin-bottom:36px;line-height:1.6;opacity:0;animation:up 0.7s 0.4s ease forwards}
+.pull{border-left:2px solid var(--terracotta);padding:18px 22px;margin-bottom:48px;background:var(--bg2);opacity:0;animation:up 0.7s 0.5s ease forwards}
+.pull p{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(16px,3vw,20px);line-height:1.8;color:var(--ink-mid)}
+.pull cite{display:block;margin-top:10px;font-size:12px;letter-spacing:.1em;color:var(--faint);font-style:normal}
+.gets{margin-bottom:48px;opacity:0;animation:up 0.7s 0.55s ease forwards}
+.gets-title{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:20px}
+.get-item{display:flex;gap:18px;padding:18px 0;border-bottom:1px solid var(--border)}
+.get-item:first-of-type{border-top:1px solid var(--border)}
+.get-icon{font-size:22px;flex-shrink:0;padding-top:2px}
+.get-name{font-size:15px;color:var(--ink);margin-bottom:4px}
+.get-desc{font-size:13px;color:var(--muted);line-height:1.8}
+.form-box{background:white;border:1px solid var(--border);padding:40px 36px;margin-bottom:60px;opacity:0;animation:up 0.7s 0.65s ease forwards;position:relative;overflow:hidden;box-shadow:0 2px 20px rgba(90,50,20,.06)}
+.form-box::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--terracotta),var(--gold))}
+.form-title{font-family:'Cormorant Garamond',serif;font-size:clamp(20px,4vw,26px);font-weight:400;color:var(--ink);margin-bottom:6px;line-height:1.4}
+.form-note{font-size:13px;color:var(--muted);margin-bottom:28px;line-height:1.85}
+.field{margin-bottom:12px}.field label{display:block;font-size:12px;letter-spacing:.08em;color:var(--muted);margin-bottom:6px}
+.field input{display:block;width:100%;padding:13px 16px;border:1.5px solid var(--border);background:var(--bg);font-family:'Noto Serif TC',serif;font-size:15px;color:var(--ink);outline:none;transition:border-color .2s}
+.field input:focus{border-color:var(--terracotta)}.field input::placeholder{color:var(--faint)}
+.submit-btn{display:block;width:100%;margin-top:16px;padding:16px;background:var(--ink);color:white;border:none;font-family:'Noto Serif TC',serif;font-size:15px;letter-spacing:.06em;cursor:pointer;transition:background .3s}
+.submit-btn:hover{background:var(--terracotta)}
+.privacy{margin-top:14px;font-size:11px;color:var(--faint);text-align:center;letter-spacing:.05em}
+.success{display:none;text-align:center;padding:12px 0}
+.success-icon{font-size:40px;margin-bottom:20px}
+.success-title{font-family:'Cormorant Garamond',serif;font-size:clamp(24px,5vw,34px);font-weight:400;color:var(--ink);margin-bottom:16px;line-height:1.4}
+.success-title em{font-style:italic;color:var(--terracotta)}
+.success-body{font-size:14px;color:var(--ink-mid);line-height:1.95;margin-bottom:20px;white-space:pre-line}
+.success-note{font-size:12px;color:var(--faint);line-height:1.8;padding:14px 18px;border:1px solid var(--border)}
+footer{padding:32px 0 52px;border-top:1px solid var(--border);opacity:0;animation:up 0.7s 0.75s ease forwards}
+.footer-inner{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.footer-name{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:var(--muted)}
+.footer-note{font-size:11px;color:var(--faint);line-height:1.8;text-align:right}
+@keyframes up{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@media(max-width:480px){.form-box{padding:28px 20px}.footer-inner{flex-direction:column;align-items:flex-start}.footer-note{text-align:left}}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <header><div class="site-tag">許藍方・希塔療癒導師・關係靈氣療癒師</div></header>
-  <section class="hero">
-    <div class="hero-label">免費資源</div>
-    <h1>${r.hero_title_line1}<br><em>${r.hero_title_line2}</em></h1>
-    <p class="hero-sub">${r.hero_sub}</p>
-    <div class="pull">
-      <p>「${r.pull_quote}」</p>
-      <cite>—— ${r.pull_cite}</cite>
-    </div>
-    <div class="gets">
-      <div class="gets-title">領取後你會收到</div>
-      ${r.gets.map(g => `<div class="get-item"><div class="get-icon">${g.icon}</div><div><div class="get-name">${g.name}</div><div class="get-desc">${g.desc}</div></div></div>`).join('\n      ')}
-    </div>
-  </section>
-  <div class="form-box">
-    <div id="form-area">
-      <div class="form-title">${r.form_title}</div>
-      <p class="form-note">${r.form_note}</p>
-      <form id="kit-form" onsubmit="submitForm(event)">
-        <div class="field"><label>你的名字</label><input type="text" name="first_name" placeholder="請輸入名字" required></div>
-        <div class="field"><label>Email 信箱</label><input type="email" name="email_address" placeholder="請輸入有效的 Email" required></div>
-        <button type="submit" class="submit-btn">${r.button_text}</button>
-      </form>
-      <p class="privacy">🔒 你的資訊不會被分享給任何第三方</p>
-    </div>
-    <div class="success" id="success-area">
-      <div class="success-icon">✉️</div>
-      <div class="success-title">${r.success_title_line1}<em>${r.success_title_em}</em></div>
-      <p class="success-body">${r.success_body}</p>
-      <div class="success-note">找不到信？記得檢查垃圾郵件資料夾，或把藍方的 email 加入聯絡人。</div>
-    </div>
+<header><div class="site-tag">${d.name}・${d.title}</div></header>
+<section class="hero">
+  <div class="hero-label">免費資源</div>
+  <h1>${d.t1}<br><em>${d.t2}</em></h1>
+  <p class="hero-sub">${d.sub}</p>
+  <div class="pull"><p>「${d.quote}」</p><cite>—— ${d.cite}</cite></div>
+  <div class="gets">
+    <div class="gets-title">領取後你會收到</div>
+    ${d.gets.map(g=>`<div class="get-item"><div class="get-icon">${g.icon}</div><div><div class="get-name">${g.name}</div><div class="get-desc">${g.desc}</div></div></div>`).join('\n    ')}
   </div>
-  <footer>
-    <div class="footer-inner">
-      <div class="footer-name">許藍方</div>
-      <div class="footer-note">填寫即同意接收電子報<br>你的 email 不會分享給任何第三方</div>
-    </div>
-  </footer>
+</section>
+<div class="form-box">
+  <div id="form-area">
+    <div class="form-title">${d.form_title}</div>
+    <p class="form-note">${d.form_note}</p>
+    <form id="kit-form" onsubmit="submitForm(event)">
+      <div class="field"><label>你的名字</label><input type="text" name="first_name" placeholder="請輸入名字" required></div>
+      <div class="field"><label>Email 信箱</label><input type="email" name="email_address" placeholder="請輸入有效的 Email" required></div>
+      <button type="submit" class="submit-btn">${d.btn}</button>
+    </form>
+    <p class="privacy">🔒 你的資訊不會被分享給任何第三方</p>
+  </div>
+  <div class="success" id="success-area">
+    <div class="success-icon">✉️</div>
+    <div class="success-title">${d.success_t1}<em>${d.success_em}</em></div>
+    <p class="success-body">${d.success_body}</p>
+    <div class="success-note">找不到信？記得檢查垃圾郵件資料夾，或把 ${d.name} 的 email 加入聯絡人。</div>
+  </div>
+</div>
+<footer>
+  <div class="footer-inner">
+    <div class="footer-name">${d.name}</div>
+    <div class="footer-note">填寫即同意接收電子報<br>你的 email 不會分享給任何第三方</div>
+  </div>
+</footer>
 </div>
 <script>
-async function submitForm(e) {
-  e.preventDefault();
-  const btn = e.target.querySelector('button');
-  btn.textContent = '準備中⋯';
-  btn.disabled = true;
-  try {
-    await fetch('https://app.convertkit.com/forms/${kitId}/subscriptions', {
-      method: 'POST', body: new FormData(e.target), mode: 'no-cors'
-    });
-  } catch(err) {}
-  document.getElementById('form-area').style.display = 'none';
-  const s = document.getElementById('success-area');
-  s.style.display = 'block';
-  s.style.animation = 'fadeIn 0.5s ease forwards';
+async function submitForm(e){
+  e.preventDefault();const btn=e.target.querySelector('button');
+  btn.textContent='準備中⋯';btn.disabled=true;
+  try{await fetch('https://app.convertkit.com/forms/${d.kitId}/subscriptions',{method:'POST',body:new FormData(e.target),mode:'no-cors'});}catch(err){}
+  document.getElementById('form-area').style.display='none';
+  const s=document.getElementById('success-area');s.style.display='block';s.style.animation='fadeIn 0.5s ease forwards';
 }
 <\/script>
 </body>
 </html>`;
-
-  const blob = new Blob([html], { type: 'text/html' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'index.html';
-  a.click();
-  URL.revokeObjectURL(url);
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([html],{type:'text/html'}));
+  a.download='index.html';a.click();
 }
 
-function copyEmail(btn) {
-  const subject = document.getElementById('email-subject').textContent;
-  const body = document.getElementById('email-body').textContent;
-  const text = '主旨：' + subject + '
-
-' + body;
-  navigator.clipboard.writeText(text).then(() => {
-    btn.textContent = '已複製 ✓';
-    btn.classList.add('copied');
-    setTimeout(() => { btn.textContent = '複製'; btn.classList.remove('copied'); }, 2000);
+function copyEl(id,btn){
+  navigator.clipboard.writeText(document.getElementById(id).innerText).then(()=>{
+    btn.textContent='已複製 ✓';btn.classList.add('copied');
+    setTimeout(()=>{btn.textContent='複製';btn.classList.remove('copied');},2000);
   });
 }
-
-function copyCard(id, btn) {
-  const el = document.getElementById(id);
-  const text = el.innerText;
-  navigator.clipboard.writeText(text).then(() => {
-    btn.textContent = '已複製 ✓';
-    btn.classList.add('copied');
-    setTimeout(() => {
-      btn.textContent = '複製';
-      btn.classList.remove('copied');
-    }, 2000);
+function copyEmail(btn){
+  const text='主旨：'+document.getElementById('email-subject').textContent+'\n\n'+document.getElementById('email-body').textContent;
+  navigator.clipboard.writeText(text).then(()=>{
+    btn.textContent='已複製 ✓';btn.classList.add('copied');
+    setTimeout(()=>{btn.textContent='複製';btn.classList.remove('copied');},2000);
   });
 }
 </script>
