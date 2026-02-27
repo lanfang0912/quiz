@@ -275,12 +275,15 @@ ${article}
       headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
+        max_tokens: 2000,
         messages: [{ role: 'user', content: prompt }]
       })
     });
 
     const data = await response.json();
+    if (!response.ok || data.error) {
+      throw new Error(data.error?.message || 'API 回應錯誤：' + response.status);
+    }
     const text = data.content[0].text;
     const clean = text.replace(/```json|```/g, '').trim();
     const result = JSON.parse(clean);
@@ -289,7 +292,7 @@ ${article}
     renderResults(result, kitId);
 
   } catch(err) {
-    alert('生成失敗，請稍後再試');
+    alert('生成失敗：' + (err.message || '請確認 API Key 是否正確，並重試'));
     console.error(err);
   }
 
