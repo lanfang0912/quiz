@@ -224,7 +224,7 @@ footer { padding: 32px 0 52px; border-top: 1px solid var(--border); opacity: 0; 
 </div><!-- .wrap -->
 
 <script>
-const FORM_ID = '9234356';
+const FORM_IDS = { A: '9234356', B: '9234505', C: '9234507', D: '9234509' };
 
 const questions = [
   { text: '當對方沒有主動靠近我，我會很快懷疑自己是不是不重要。', part: 'A' },
@@ -283,6 +283,18 @@ let current = 0;
 let scores = { A: 0, B: 0, C: 0, D: 0 };
 let resultType = null;
 
+// 從網址參數直接顯示結果（信件連結用）
+window.addEventListener('DOMContentLoaded', () => {
+  const params = new URLSearchParams(window.location.search);
+  const type = params.get('type');
+  if (type && typeInfo[type]) {
+    resultType = type;
+    document.getElementById('start-section').style.display = 'none';
+    document.getElementById('result-section').style.display = 'block';
+    showResultArea();
+  }
+});
+
 function startQuiz() {
   document.getElementById('start-section').style.display = 'none';
   document.getElementById('quiz-section').style.display = 'block';
@@ -326,17 +338,8 @@ function selectOption(score, part, btn) {
   }, 380);
 }
 
-function showResult() {
-  document.getElementById('quiz-section').style.display = 'none';
-  const rs = document.getElementById('result-section');
-  rs.style.display = 'block';
-  rs.style.opacity = 0;
-  rs.style.animation = 'up 0.6s ease forwards';
-
-  // Find dominant type
-  resultType = Object.entries(scores).sort((a, b) => b[1] - a[1])[0][0];
+function showResultArea() {
   const t = typeInfo[resultType];
-
   document.getElementById('result-type-area').innerHTML = `
     <div class="result-type-badge">
       <div class="type-letter">${t.letter}</div>
@@ -347,6 +350,17 @@ function showResult() {
   `;
 }
 
+function showResult() {
+  document.getElementById('quiz-section').style.display = 'none';
+  const rs = document.getElementById('result-section');
+  rs.style.display = 'block';
+  rs.style.opacity = 0;
+  rs.style.animation = 'up 0.6s ease forwards';
+
+  resultType = Object.entries(scores).sort((a, b) => b[1] - a[1])[0][0];
+  showResultArea();
+}
+
 async function submitForm(e) {
   e.preventDefault();
   const btn = e.target.querySelector('button');
@@ -354,12 +368,15 @@ async function submitForm(e) {
   btn.disabled = true;
 
   try {
-    await fetch(`https://app.convertkit.com/forms/${FORM_ID}/subscriptions`, {
+    await fetch(`https://app.convertkit.com/forms/${FORM_IDS[resultType]}/subscriptions`, {
       method: 'POST',
       body: new FormData(e.target),
       mode: 'no-cors',
     });
   } catch (err) {}
+
+  // 更新網址讓信件連結可以回來看結果
+  history.replaceState(null, '', `?type=${resultType}`);
 
   document.getElementById('form-area').style.display = 'none';
   const s = document.getElementById('success-area');
