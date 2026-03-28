@@ -14,47 +14,89 @@ export function LandingPageView({ page }: { page: LandingPage }) {
   const consults = [page.consult_1, page.consult_2, page.consult_3].filter(Boolean) as string[];
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Hero */}
-      <HeroSection
-        title={page.hero_title ?? page.name}
-        subtitle={page.hero_subtitle ?? undefined}
-        btn={page.btn ?? undefined}
-        slug={page.slug}
+    <>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;900&family=Noto+Sans+TC:wght@300;400;500&display=swap"
+        rel="stylesheet"
       />
+      <div
+        className="min-h-screen relative overflow-x-hidden"
+        style={{
+          background: "linear-gradient(160deg,#fdf8f3 0%,#faeee6 50%,#fdf4ef 100%)",
+          color: "#3d2b1f",
+          fontFamily: "'Noto Sans TC', sans-serif",
+        }}
+      >
+        {/* Background glows */}
+        <div
+          className="fixed inset-0 pointer-events-none"
+          style={{ zIndex: 0 }}
+        >
+          <div
+            className="absolute rounded-full"
+            style={{
+              width: 400, height: 400, top: -100, left: -100,
+              background: "radial-gradient(circle,rgba(201,133,110,.18),transparent)",
+              filter: "blur(80px)",
+            }}
+          />
+          <div
+            className="absolute rounded-full"
+            style={{
+              width: 300, height: 300, bottom: "10%", right: -80,
+              background: "radial-gradient(circle,rgba(201,133,110,.12),transparent)",
+              filter: "blur(80px)",
+            }}
+          />
+        </div>
 
-      {/* 主要表單 */}
-      <section className="py-12 px-4 max-w-lg mx-auto">
-        {page.cta && (
-          <p className="text-center text-gray-600 mb-6 leading-relaxed whitespace-pre-line">
-            {page.cta}
-          </p>
-        )}
-        <SubscribeForm slug={page.slug} btnLabel={page.btn ?? "立即領取"} />
-      </section>
+        {/* Content */}
+        <div className="relative" style={{ zIndex: 1 }}>
+          <div className="max-w-xl mx-auto px-5 pb-20">
+            <HeroSection
+              title={page.hero_title ?? page.name}
+              subtitle={page.hero_subtitle ?? undefined}
+              btn={page.btn ?? undefined}
+              slug={page.slug}
+            />
 
-      {/* FAQ */}
-      {faqs.length > 0 && (
-        <section className="py-10 px-4 max-w-2xl mx-auto">
-          <FaqSection faqs={faqs} />
-        </section>
-      )}
+            {/* CTA text */}
+            {page.cta && (
+              <p
+                className="text-center leading-relaxed mb-8 whitespace-pre-line"
+                style={{ fontSize: 15, color: "#9a8070", lineHeight: 1.9 }}
+              >
+                {page.cta}
+              </p>
+            )}
 
-      {/* Consult Scripts */}
-      {consults.length > 0 && (
-        <section className="py-10 px-4 max-w-2xl mx-auto">
-          <ConsultSection scripts={consults} />
-        </section>
-      )}
+            {/* Form */}
+            <SubscribeForm slug={page.slug} btnLabel={page.btn ?? "立即領取"} />
 
-      {/* 結尾 CTA */}
-      {page.btn && (
-        <section className="py-12 px-4 bg-gray-50">
-          <div className="max-w-lg mx-auto text-center">
-            <SubscribeForm slug={page.slug} btnLabel={page.btn} />
+            {/* Consult scripts */}
+            {consults.length > 0 && (
+              <section className="mt-10">
+                <ConsultSection scripts={consults} />
+              </section>
+            )}
+
+            {/* FAQ */}
+            {faqs.length > 0 && (
+              <section className="mt-10">
+                <FaqSection faqs={faqs} />
+              </section>
+            )}
+
+            {/* Footer */}
+            <p
+              className="text-center mt-12"
+              style={{ fontSize: 12, color: "#c0a090", lineHeight: 1.7 }}
+            >
+              🔒 你的資訊不會分享給任何第三方
+            </p>
           </div>
-        </section>
-      )}
-    </div>
+        </div>
+      </div>
+    </>
   );
 }

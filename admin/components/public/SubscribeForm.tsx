@@ -9,6 +9,36 @@ type Props = {
 
 type State = "idle" | "loading" | "success" | "error";
 
+const cardStyle: React.CSSProperties = {
+  background: "rgba(255,255,255,0.80)",
+  border: "1px solid rgba(176,112,96,.15)",
+  borderRadius: 16,
+  backdropFilter: "blur(12px)",
+  boxShadow: "0 4px 24px rgba(176,112,96,.08)",
+  padding: "32px 28px",
+};
+
+const inputStyle: React.CSSProperties = {
+  width: "100%",
+  background: "#fff",
+  border: "1px solid rgba(176,112,96,.25)",
+  borderRadius: 10,
+  padding: "14px 16px",
+  color: "#3d2b1f",
+  fontSize: 15,
+  fontFamily: "'Noto Sans TC', sans-serif",
+  outline: "none",
+  transition: "border-color .2s",
+};
+
+const labelStyle: React.CSSProperties = {
+  display: "block",
+  fontSize: 12,
+  color: "#9a8070",
+  marginBottom: 8,
+  letterSpacing: ".5px",
+};
+
 export function SubscribeForm({ slug, btnLabel = "立即領取" }: Props) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -20,7 +50,6 @@ export function SubscribeForm({ slug, btnLabel = "立即領取" }: Props) {
     e.preventDefault();
     setState("loading");
     setErrorMsg("");
-
     try {
       const res = await fetch("/api/public/subscribe", {
         method: "POST",
@@ -38,78 +67,78 @@ export function SubscribeForm({ slug, btnLabel = "立即領取" }: Props) {
 
   if (state === "success") {
     return (
-      <div
-        id={`subscribe-form-${slug}`}
-        className="bg-green-50 border border-green-200 rounded-2xl p-8 text-center"
-      >
-        <div className="text-3xl mb-3">✓</div>
-        <h3 className="font-bold text-green-800 text-lg mb-1">成功送出！</h3>
-        <p className="text-green-700 text-sm">請查收你的 Email，資料即將送達。</p>
+      <div id={`subscribe-form-${slug}`} style={{ ...cardStyle, textAlign: "center", padding: "40px 28px" }}>
+        <div style={{ fontSize: 48, marginBottom: 16 }}>✉️</div>
+        <h3 style={{ fontFamily: "'Noto Serif TC', serif", fontSize: 22, fontWeight: 600, color: "#3d2b1f", marginBottom: 12 }}>
+          謝謝你！
+        </h3>
+        <p style={{ fontSize: 14, lineHeight: 1.9, color: "#9a8070" }}>
+          清單已經在路上了<br />
+          請去信箱（包括垃圾郵件夾）找找看
+        </p>
       </div>
     );
   }
 
   return (
-    <form
-      id={`subscribe-form-${slug}`}
-      onSubmit={handleSubmit}
-      className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm space-y-4"
-    >
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          姓名 <span className="text-red-500">*</span>
-        </label>
+    <form id={`subscribe-form-${slug}`} onSubmit={handleSubmit} style={cardStyle}>
+      <h2 style={{ fontFamily: "'Noto Serif TC', serif", fontSize: 20, fontWeight: 600, textAlign: "center", color: "#3d2b1f", marginBottom: 8 }}>
+        免費領取清單
+      </h2>
+      <p style={{ fontSize: 13, textAlign: "center", color: "#9a8070", marginBottom: 28, lineHeight: 1.7 }}>
+        填入資料，清單會寄到你的信箱
+      </p>
+
+      <div style={{ marginBottom: 16 }}>
+        <label style={labelStyle}>你的名字</label>
         <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-          placeholder="你的名字"
-          className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm
-                     focus:outline-none focus:ring-2 focus:ring-blue-500"
+          type="text" value={name} onChange={(e) => setName(e.target.value)}
+          required placeholder="請輸入名字" style={inputStyle}
+          onFocus={(e) => (e.target.style.borderColor = "#c9856e")}
+          onBlur={(e) => (e.target.style.borderColor = "rgba(176,112,96,.25)")}
         />
       </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Email <span className="text-red-500">*</span>
-        </label>
+
+      <div style={{ marginBottom: 16 }}>
+        <label style={labelStyle}>Email 信箱</label>
         <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          placeholder="your@email.com"
-          className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm
-                     focus:outline-none focus:ring-2 focus:ring-blue-500"
+          type="email" value={email} onChange={(e) => setEmail(e.target.value)}
+          required placeholder="請輸入有效的 Email" style={inputStyle}
+          onFocus={(e) => (e.target.style.borderColor = "#c9856e")}
+          onBlur={(e) => (e.target.style.borderColor = "rgba(176,112,96,.25)")}
         />
       </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          電話 <span className="text-gray-400 font-normal">（選填）</span>
-        </label>
+
+      <div style={{ marginBottom: 24 }}>
+        <label style={labelStyle}>電話 <span style={{ color: "#c0a090", fontWeight: 300 }}>（選填）</span></label>
         <input
-          type="tel"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          placeholder="09xx-xxx-xxx"
-          className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm
-                     focus:outline-none focus:ring-2 focus:ring-blue-500"
+          type="tel" value={phone} onChange={(e) => setPhone(e.target.value)}
+          placeholder="09xx-xxx-xxx" style={inputStyle}
+          onFocus={(e) => (e.target.style.borderColor = "#c9856e")}
+          onBlur={(e) => (e.target.style.borderColor = "rgba(176,112,96,.25)")}
         />
       </div>
 
       {state === "error" && (
-        <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
-          {errorMsg}
-        </p>
+        <p style={{ fontSize: 12, color: "#c0503a", marginBottom: 12 }}>{errorMsg}</p>
       )}
 
       <button
         type="submit"
         disabled={state === "loading"}
-        className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400
-                   text-white font-semibold py-3 rounded-xl text-sm transition-colors"
+        style={{
+          width: "100%",
+          background: state === "loading" ? "rgba(176,112,96,.5)" : "linear-gradient(135deg,#b07060,#c9856e)",
+          border: "none", borderRadius: 12, padding: 16,
+          color: "#fff", fontSize: 16, fontWeight: 500,
+          fontFamily: "'Noto Sans TC', sans-serif",
+          cursor: state === "loading" ? "not-allowed" : "pointer",
+          letterSpacing: "0.05em",
+          boxShadow: "0 8px 32px rgba(176,112,96,.25)",
+          transition: "transform .2s",
+        }}
       >
-        {state === "loading" ? "送出中..." : btnLabel}
+        {state === "loading" ? "送出中⋯" : btnLabel}
       </button>
     </form>
   );
