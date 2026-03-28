@@ -47,11 +47,12 @@ export async function POST(req: NextRequest) {
 
     // ── 4. 發信 + 寫 email_log ────────────────────────────────
     try {
+      const interpolate = (str: string) => str.replace(/\{name\}/g, name).replace(/\{email\}/g, email);
       const result = await sendSubscribeEmail({
         to: email,
         name,
-        subject: page.email_subject ?? `感謝你的訂閱`,
-        body: page.email_body ?? `Hi ${name}，感謝你！`,
+        subject: interpolate(page.email_subject ?? `感謝你的訂閱`),
+        body: interpolate(page.email_body ?? `Hi ${name}，感謝你！`),
       });
 
       await createEmailLog({
