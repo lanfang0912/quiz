@@ -1,6 +1,6 @@
 import { LandingPageForm } from "@/components/admin/LandingPageForm";
 
-export const metadata = { title: "新增頁面 | Urland Admin" };
+export const metadata = { title: "新增頁面 | 悠藍電子報管理系統" };
 
 export default function NewLandingPagePage() {
   return (

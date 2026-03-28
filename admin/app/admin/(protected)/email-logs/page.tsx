@@ -1,6 +1,6 @@
 import { EmailLogsTable } from "@/components/admin/EmailLogsTable";
 
-export const metadata = { title: "Email Logs | Urland Admin" };
+export const metadata = { title: "Email Logs | 悠藍電子報管理系統" };
 
 export default function EmailLogsPage() {
   return (

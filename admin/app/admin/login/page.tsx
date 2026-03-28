@@ -1,7 +1,7 @@
 import { LoginForm } from "@/components/admin/LoginForm";
 
 export const metadata = {
-  title: "登入 | Urland Admin",
+  title: "登入 | 悠藍電子報管理系統",
 };
 
 export default function LoginPage() {
@@ -9,7 +9,7 @@ export default function LoginPage() {
     <main className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">Urland Admin</h1>
+          <h1 className="text-2xl font-bold text-gray-900">悠藍電子報管理系統</h1>
           <p className="text-sm text-gray-500 mt-1">Landing Page 後台管理</p>
         </div>
         <LoginForm />

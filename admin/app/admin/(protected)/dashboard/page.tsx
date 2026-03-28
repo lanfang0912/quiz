@@ -1,7 +1,7 @@
 import { getDashboardStats } from "@/lib/db/email-logs";
 import { getLandingPages } from "@/lib/db/landing-pages";
 
-export const metadata = { title: "Dashboard | Urland Admin" };
+export const metadata = { title: "Dashboard | 悠藍電子報管理系統" };
 export const dynamic = "force-dynamic";
 
 export default async function DashboardPage() {

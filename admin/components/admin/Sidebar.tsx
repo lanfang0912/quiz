@@ -18,7 +18,7 @@ export function Sidebar() {
     <aside className="w-56 bg-white border-r border-gray-200 flex flex-col">
       {/* Logo */}
       <div className="px-5 py-5 border-b border-gray-200">
-        <span className="font-bold text-gray-900 text-base">Urland Admin</span>
+        <span className="font-bold text-gray-900 text-base">悠藍電子報管理系統</span>
       </div>
 
       {/* Nav */}

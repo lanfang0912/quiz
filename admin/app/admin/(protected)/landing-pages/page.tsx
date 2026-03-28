@@ -2,7 +2,7 @@ import Link from "next/link";
 import { getLandingPages } from "@/lib/db/landing-pages";
 import { LandingPageTable } from "@/components/admin/LandingPageTable";
 
-export const metadata = { title: "Landing Pages | Urland Admin" };
+export const metadata = { title: "Landing Pages | 悠藍電子報管理系統" };
 export const dynamic = "force-dynamic";
 
 export default async function LandingPagesPage() {

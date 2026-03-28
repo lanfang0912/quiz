@@ -1,7 +1,7 @@
 import { getLandingPages } from "@/lib/db/landing-pages";
 import { SubscribersTable } from "@/components/admin/SubscribersTable";
 
-export const metadata = { title: "Subscribers | Urland Admin" };
+export const metadata = { title: "Subscribers | 悠藍電子報管理系統" };
 export const dynamic = "force-dynamic";
 
 export default async function SubscribersPage() {
