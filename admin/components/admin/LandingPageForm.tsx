@@ -213,36 +213,6 @@ export function LandingPageForm({ page }: { page?: LandingPage }) {
           <Field label="Hero 副標題">
             <Input value={form.hero_subtitle ?? ""} onChange={(v) => set("hero_subtitle", v)} />
           </Field>
-          <div className="border-t border-gray-100 pt-4 mt-2">
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">FAQ</p>
-            {([1, 2, 3] as const).map((n) => (
-              <div key={n} className="mb-4">
-                <Field label={`FAQ ${n} 問題`}>
-                  <Input
-                    value={(form[`faq_${n}_q`] as string) ?? ""}
-                    onChange={(v) => set(`faq_${n}_q`, v)}
-                  />
-                </Field>
-                <Field label={`FAQ ${n} 回答`}>
-                  <Textarea
-                    value={(form[`faq_${n}_a`] as string) ?? ""}
-                    onChange={(v) => set(`faq_${n}_a`, v)}
-                  />
-                </Field>
-              </div>
-            ))}
-          </div>
-          <div className="border-t border-gray-100 pt-4 mt-2">
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Consult Scripts</p>
-            {([1, 2, 3] as const).map((n) => (
-              <Field key={n} label={`腳本 ${n}`}>
-                <Textarea
-                  value={(form[`consult_${n}`] as string) ?? ""}
-                  onChange={(v) => set(`consult_${n}`, v)}
-                />
-              </Field>
-            ))}
-          </div>
         </Section>
       )}
 
