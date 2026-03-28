@@ -26,8 +26,11 @@ export async function POST(_req: NextRequest, { params }: Params) {
       ? await getLandingPageById(subscriber.landing_page_id)
       : null;
 
-    const subject = page?.email_subject ?? "感謝你的訂閱";
-    const body = page?.email_body ?? `Hi ${subscriber.name}，感謝你！`;
+    const interpolate = (str: string) =>
+      str.replace(/\{name\}/g, subscriber.name).replace(/\{email\}/g, subscriber.email);
+
+    const subject = interpolate(page?.email_subject ?? "感謝你的訂閱");
+    const body = interpolate(page?.email_body ?? `Hi ${subscriber.name}，感謝你！`);
 
     const result = await resendEmail({
       to: subscriber.email,
