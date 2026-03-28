@@ -153,6 +153,18 @@ export function LandingPageTable({ initialPages }: { initialPages: LandingPage[]
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center justify-end gap-2">
+                      <a
+                        href={
+                          page.page_type === "external" && page.external_url
+                            ? page.external_url
+                            : `/${page.slug}`
+                        }
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-gray-400 hover:text-gray-600 text-xs"
+                      >
+                        預覽 ↗
+                      </a>
                       <Link
                         href={`/admin/landing-pages/${page.id}/edit`}
                         className="text-blue-600 hover:underline text-xs"

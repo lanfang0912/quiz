@@ -26,6 +26,7 @@ function emptyForm(): FormData {
     migration_status: "hosted",
     status: "draft",
     theme: "rose",
+    author_tag: "許藍方・希塔療癒導師・關係靈氣療癒師",
     btn: null,
     cta: null,
     keyword: null,
@@ -171,6 +172,13 @@ export function LandingPageForm({ page }: { page?: LandingPage }) {
                 { value: "draft",     label: "草稿" },
                 { value: "published", label: "已發佈" },
               ]}
+            />
+          </Field>
+          <Field label="作者標語">
+            <Input
+              value={form.author_tag ?? ""}
+              onChange={(v) => set("author_tag", v)}
+              placeholder="許藍方・希塔療癒導師・關係靈氣療癒師"
             />
           </Field>
           <Field label="頁面主題">

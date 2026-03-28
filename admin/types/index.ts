@@ -15,6 +15,7 @@ export interface LandingPage {
   migration_status: MigrationStatus;
   status: PageStatus;
   theme: PageTheme;
+  author_tag: string | null;
 
   btn: string | null;
   cta: string | null;

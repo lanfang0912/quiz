@@ -40,6 +40,11 @@ export function LandingPageView({ page }: { page: LandingPage }) {
 
         <div className="relative" style={{ zIndex: 1 }}>
           <div className="max-w-xl mx-auto px-5 pb-20">
+            {page.author_tag && (
+              <div className="pt-8 pb-2 text-center" style={{ fontSize: 12, color: theme.muted, letterSpacing: "0.08em", fontFamily: theme.headingFont, fontStyle: "italic" }}>
+                {page.author_tag}
+              </div>
+            )}
             <HeroSection
               title={page.hero_title ?? page.name}
               subtitle={page.hero_subtitle ?? undefined}
