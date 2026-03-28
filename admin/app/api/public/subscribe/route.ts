@@ -10,7 +10,7 @@ import type { SubscribeRequest } from "@/types";
 export async function POST(req: NextRequest) {
   try {
     const body: SubscribeRequest = await req.json();
-    const { slug, name, email, phone, line_id, utm_source, utm_medium, utm_campaign } = body;
+    const { slug, name, email, phone, line_id, utm_source, utm_medium, utm_campaign, note } = body;
 
     // ── 1. 基本驗證 ───────────────────────────────────────────
     if (!slug || !name || !email) {
@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
       utm_medium: utm_medium ?? null,
       utm_campaign: utm_campaign ?? null,
       tag: null,
-      note: null,
+      note: note ?? null,
     });
 
     // ── 4. 發信 + 寫 email_log ────────────────────────────────
