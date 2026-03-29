@@ -7,6 +7,16 @@ import { syncSubscriberToNotion } from "@/lib/notion/sync";
 import { markEmailSent } from "@/lib/db/subscribers";
 import type { SubscribeRequest } from "@/types";
 
+const CORS_HEADERS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type",
+};
+
+export async function OPTIONS() {
+  return new Response(null, { status: 204, headers: CORS_HEADERS });
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body: SubscribeRequest = await req.json();
@@ -88,9 +98,9 @@ export async function POST(req: NextRequest) {
     });
 
     // ── 6. 回傳成功 ───────────────────────────────────────────
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true }, { headers: CORS_HEADERS });
   } catch (err) {
     const msg = err instanceof Error ? err.message : "Server error";
-    return NextResponse.json({ success: false, error: msg }, { status: 500 });
+    return NextResponse.json({ success: false, error: msg }, { status: 500, headers: CORS_HEADERS });
   }
 }
