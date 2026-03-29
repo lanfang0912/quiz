@@ -11,6 +11,7 @@ type QuizSection = { title: string; itemsText: string };
 type ScoreRange = { min: string; max: string; label: string; description: string };
 type QuizFormData = {
   intro: string;
+  scoring_mode: "total" | "section";
   sections: QuizSection[];
   scoring: ScoreRange[];
   practice: string;
@@ -20,6 +21,7 @@ type QuizFormData = {
 function defaultQuiz(): QuizFormData {
   return {
     intro: "在符合你的狀況前打勾，不用想太久，第一直覺最準。",
+    scoring_mode: "total",
     sections: [
       { title: "第一部分", itemsText: "" },
       { title: "第二部分", itemsText: "" },
@@ -37,13 +39,14 @@ function defaultQuiz(): QuizFormData {
 function quizToJson(q: QuizFormData): Record<string, unknown> {
   return {
     intro: q.intro,
+    scoring_mode: q.scoring_mode,
     sections: q.sections.map((s) => ({
       title: s.title,
       items: s.itemsText.split("\n").map((l) => l.trim()).filter(Boolean),
     })),
-    scoring: q.scoring.map((s) => ({
-      min: Number(s.min), max: Number(s.max), label: s.label, description: s.description,
-    })),
+    scoring: q.scoring_mode === "section"
+      ? q.scoring.map((s) => ({ label: s.label, description: s.description }))
+      : q.scoring.map((s) => ({ min: Number(s.min), max: Number(s.max), label: s.label, description: s.description })),
     practice: q.practice.split("\n").map((l) => l.trim()).filter(Boolean),
     closing: q.closing,
   };
@@ -52,8 +55,10 @@ function quizToJson(q: QuizFormData): Record<string, unknown> {
 function jsonToQuiz(json: Record<string, unknown>): QuizFormData {
   type RawSection = { title?: string; items?: string[] };
   type RawScore = { min?: number; max?: number; label?: string; description?: string };
+  const mode = (json.scoring_mode as "total" | "section") ?? "total";
   return {
     intro: (json.intro as string) ?? "",
+    scoring_mode: mode,
     sections: ((json.sections as RawSection[]) ?? []).map((s) => ({
       title: s.title ?? "",
       itemsText: (s.items ?? []).join("\n"),
@@ -342,6 +347,16 @@ export function LandingPageForm({ page }: { page?: LandingPage }) {
             <Field label="說明文字（頁面頂部）">
               <Textarea value={quiz.intro} onChange={(v) => setQuiz((q) => ({ ...q, intro: v }))} rows={2} />
             </Field>
+            <Field label="計分模式">
+              <Select
+                value={quiz.scoring_mode}
+                onChange={(v) => setQuiz((q) => ({ ...q, scoring_mode: v as "total" | "section" }))}
+                options={[
+                  { value: "total", label: "總分模式（分數範圍對應結果）" },
+                  { value: "section", label: "分層模式（哪層勾最多 → 對應結果）" },
+                ]}
+              />
+            </Field>
           </Section>
 
           {/* 題目區塊 */}
@@ -350,8 +365,11 @@ export function LandingPageForm({ page }: { page?: LandingPage }) {
               <div className="flex items-center justify-between mb-1">
                 <span className="text-sm font-medium text-gray-700">區塊 {si + 1}</span>
                 {quiz.sections.length > 1 && (
-                  <button type="button" onClick={() => setQuiz((q) => ({ ...q, sections: q.sections.filter((_, i) => i !== si) }))}
-                    className="text-xs text-red-500 hover:underline">刪除</button>
+                  <button type="button" onClick={() => setQuiz((q) => ({
+                    ...q,
+                    sections: q.sections.filter((_, i) => i !== si),
+                    scoring: q.scoring_mode === "section" ? q.scoring.filter((_, i) => i !== si) : q.scoring,
+                  }))} className="text-xs text-red-500 hover:underline">刪除</button>
                 )}
               </div>
               <Field label="區塊標題">
@@ -363,37 +381,52 @@ export function LandingPageForm({ page }: { page?: LandingPage }) {
             </Section>
           ))}
           <button type="button"
-            onClick={() => setQuiz((q) => ({ ...q, sections: [...q.sections, { title: `第${q.sections.length + 1}部分`, itemsText: "" }] }))}
+            onClick={() => setQuiz((q) => ({
+              ...q,
+              sections: [...q.sections, { title: `第${q.sections.length + 1}部分`, itemsText: "" }],
+              scoring: q.scoring_mode === "section" ? [...q.scoring, { min: "", max: "", label: "", description: "" }] : q.scoring,
+            }))}
             className="text-sm text-blue-600 hover:underline">+ 新增區塊</button>
 
           {/* 計分標準 */}
           <Section>
-            <div className="text-sm font-medium text-gray-700 mb-3">計分標準</div>
+            <div className="text-sm font-medium text-gray-700 mb-1">
+              {quiz.scoring_mode === "section" ? "各層結果（對應上方區塊順序）" : "計分標準"}
+            </div>
+            {quiz.scoring_mode === "section" && (
+              <p className="text-xs text-gray-400 mb-3">每一條對應一個區塊，哪層勾最多就顯示該層結果</p>
+            )}
             {quiz.scoring.map((s, si) => (
-              <div key={si} className="grid grid-cols-2 gap-3 mb-4 pb-4 border-b border-gray-100 last:border-0 last:mb-0 last:pb-0">
-                <Field label="最低分">
-                  <input type="number" value={s.min} onChange={(e) => setQuiz((q) => ({ ...q, scoring: q.scoring.map((r, i) => i === si ? { ...r, min: e.target.value } : r) }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              <div key={si} className="mb-4 pb-4 border-b border-gray-100 last:border-0 last:mb-0 last:pb-0">
+                {quiz.scoring_mode === "section" ? (
+                  <p className="text-xs font-medium text-gray-500 mb-2">
+                    對應區塊 {si + 1}：{quiz.sections[si]?.title ?? ""}
+                  </p>
+                ) : (
+                  <div className="grid grid-cols-2 gap-3 mb-3">
+                    <Field label="最低分">
+                      <input type="number" value={s.min} onChange={(e) => setQuiz((q) => ({ ...q, scoring: q.scoring.map((r, i) => i === si ? { ...r, min: e.target.value } : r) }))}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                    </Field>
+                    <Field label="最高分">
+                      <input type="number" value={s.max} onChange={(e) => setQuiz((q) => ({ ...q, scoring: q.scoring.map((r, i) => i === si ? { ...r, max: e.target.value } : r) }))}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                    </Field>
+                  </div>
+                )}
+                <Field label="結果標題">
+                  <Input value={s.label} onChange={(v) => setQuiz((q) => ({ ...q, scoring: q.scoring.map((r, i) => i === si ? { ...r, label: v } : r) }))} />
                 </Field>
-                <Field label="最高分">
-                  <input type="number" value={s.max} onChange={(e) => setQuiz((q) => ({ ...q, scoring: q.scoring.map((r, i) => i === si ? { ...r, max: e.target.value } : r) }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <Field label="結果描述">
+                  <Textarea rows={2} value={s.description} onChange={(v) => setQuiz((q) => ({ ...q, scoring: q.scoring.map((r, i) => i === si ? { ...r, description: v } : r) }))} />
                 </Field>
-                <div className="col-span-2">
-                  <Field label="結果標題">
-                    <Input value={s.label} onChange={(v) => setQuiz((q) => ({ ...q, scoring: q.scoring.map((r, i) => i === si ? { ...r, label: v } : r) }))} />
-                  </Field>
-                </div>
-                <div className="col-span-2">
-                  <Field label="結果描述">
-                    <Textarea rows={2} value={s.description} onChange={(v) => setQuiz((q) => ({ ...q, scoring: q.scoring.map((r, i) => i === si ? { ...r, description: v } : r) }))} />
-                  </Field>
-                </div>
               </div>
             ))}
-            <button type="button"
-              onClick={() => setQuiz((q) => ({ ...q, scoring: [...q.scoring, { min: "", max: "", label: "", description: "" }] }))}
-              className="text-sm text-blue-600 hover:underline">+ 新增計分範圍</button>
+            {quiz.scoring_mode === "total" && (
+              <button type="button"
+                onClick={() => setQuiz((q) => ({ ...q, scoring: [...q.scoring, { min: "", max: "", label: "", description: "" }] }))}
+                className="text-sm text-blue-600 hover:underline">+ 新增計分範圍</button>
+            )}
           </Section>
 
           {/* 小練習 + 結語 */}

@@ -6,10 +6,12 @@ import type { Theme } from "@/lib/themes";
 
 type QuizSection = { title: string; items: string[] };
 type ScoreRange = { min: number; max: number; label: string; description: string };
+type SectionResult = { label: string; description: string };
 type QuizContent = {
   intro?: string;
+  scoring_mode?: "total" | "section";
   sections: QuizSection[];
-  scoring: ScoreRange[];
+  scoring: ScoreRange[] | SectionResult[];
   practice?: string[];
   closing?: string;
 };
@@ -30,11 +32,34 @@ export function QuizView({ page, theme }: Props) {
 
   const score = checked.size;
   const total = content.sections.reduce((acc, s) => acc + s.items.length, 0);
+  const isSectionMode = content.scoring_mode === "section";
 
-  function getResult(): ScoreRange {
+  function getSectionCounts(): number[] {
+    return content.sections.map((section, si) =>
+      section.items.filter((_, ii) => checked.has(`${si}-${ii}`)).length
+    );
+  }
+
+  function getDominantSection(counts: number[]): number {
+    let maxCount = -1;
+    let maxIndex = 0;
+    counts.forEach((count, i) => {
+      if (count >= maxCount) { maxCount = count; maxIndex = i; }
+    });
+    return maxIndex;
+  }
+
+  function getResult(): SectionResult {
+    if (isSectionMode) {
+      const counts = getSectionCounts();
+      const idx = getDominantSection(counts);
+      const s = content.scoring as SectionResult[];
+      return s[idx] ?? s[s.length - 1];
+    }
+    const ranges = content.scoring as ScoreRange[];
     return (
-      content.scoring.find((s) => score >= s.min && score <= s.max) ??
-      content.scoring[content.scoring.length - 1]
+      ranges.find((s) => score >= s.min && score <= s.max) ??
+      ranges[ranges.length - 1]
     );
   }
 
@@ -174,10 +199,13 @@ export function QuizView({ page, theme }: Props) {
                 setSubmitError("");
                 try {
                   const r = getResult();
+                  const noteStr = isSectionMode
+                    ? `分層診斷｜${r.label}`
+                    : `分數：${score}／${total}｜${r.label}`;
                   await fetch("/api/public/subscribe", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ slug: page.slug, name, email, note: `分數：${score}／${total}｜${r.label}`, score, result_label: r.label, result_description: r.description }),
+                    body: JSON.stringify({ slug: page.slug, name, email, note: noteStr, score, result_label: r.label, result_description: r.description }),
                   });
                   setPhase("result");
                 } catch {
@@ -210,20 +238,65 @@ export function QuizView({ page, theme }: Props) {
             <div className="space-y-6">
               {/* Score result */}
               <div
-                className="rounded-2xl p-7 text-center"
+                className="rounded-2xl p-7"
                 style={{ background: "rgba(255,255,255,0.7)", backdropFilter: "blur(16px)", border: `1px solid ${theme.border}` }}
               >
-                <div style={{ fontSize: 13, color: theme.muted, marginBottom: 8 }}>你的分數</div>
-                <div style={{ fontFamily: theme.headingFont, fontWeight: 900, fontSize: 48, color: theme.accent, lineHeight: 1 }}>
-                  {score}
-                </div>
-                <div style={{ fontSize: 12, color: theme.muted, marginBottom: 16 }}>/ {total} 題</div>
-                <div style={{ fontFamily: theme.headingFont, fontWeight: 700, fontSize: 18, color: theme.text, marginBottom: 8 }}>
-                  {result.label}
-                </div>
-                <p style={{ fontSize: 14, color: theme.muted, lineHeight: 1.8 }}>
-                  {result.description}
-                </p>
+                {isSectionMode ? (() => {
+                  const counts = getSectionCounts();
+                  const dominantIdx = getDominantSection(counts);
+                  return (
+                    <>
+                      <div className="space-y-3 mb-6">
+                        {content.sections.map((section, si) => {
+                          const count = counts[si];
+                          const sectionTotal = section.items.length;
+                          const pct = sectionTotal > 0 ? Math.round((count / sectionTotal) * 100) : 0;
+                          const isDominant = si === dominantIdx;
+                          return (
+                            <div key={si}>
+                              <div className="flex justify-between items-center mb-1">
+                                <span style={{ fontSize: 13, fontWeight: isDominant ? 700 : 400, color: isDominant ? theme.accent : theme.muted }}>
+                                  {section.title}
+                                </span>
+                                <span style={{ fontSize: 12, color: isDominant ? theme.accent : theme.muted }}>
+                                  {count} / {sectionTotal}
+                                </span>
+                              </div>
+                              <div className="rounded-full overflow-hidden" style={{ height: 6, background: theme.border }}>
+                                <div
+                                  className="h-full rounded-full transition-all"
+                                  style={{ width: `${pct}%`, background: isDominant ? theme.accent : theme.muted, opacity: isDominant ? 1 : 0.4 }}
+                                />
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                      <div style={{ borderTop: `1px solid ${theme.border}`, paddingTop: 20 }}>
+                        <div style={{ fontFamily: theme.headingFont, fontWeight: 700, fontSize: 18, color: theme.text, marginBottom: 10, textAlign: "center" }}>
+                          {result.label}
+                        </div>
+                        <p style={{ fontSize: 14, color: theme.muted, lineHeight: 1.8 }}>
+                          {result.description}
+                        </p>
+                      </div>
+                    </>
+                  );
+                })() : (
+                  <div className="text-center">
+                    <div style={{ fontSize: 13, color: theme.muted, marginBottom: 8 }}>你的分數</div>
+                    <div style={{ fontFamily: theme.headingFont, fontWeight: 900, fontSize: 48, color: theme.accent, lineHeight: 1 }}>
+                      {score}
+                    </div>
+                    <div style={{ fontSize: 12, color: theme.muted, marginBottom: 16 }}>/ {total} 題</div>
+                    <div style={{ fontFamily: theme.headingFont, fontWeight: 700, fontSize: 18, color: theme.text, marginBottom: 8 }}>
+                      {result.label}
+                    </div>
+                    <p style={{ fontSize: 14, color: theme.muted, lineHeight: 1.8 }}>
+                      {result.description}
+                    </p>
+                  </div>
+                )}
               </div>
 
               {/* Practice */}
