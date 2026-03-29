@@ -14,11 +14,13 @@ const STATUS_COLOR: Record<PageStatus, string> = {
   draft: "bg-gray-100 text-gray-600",
 };
 const TYPE_LABEL: Record<PageType, string> = {
-  hosted: "Hosted",
+  hosted: "普通",
+  quiz: "測驗",
   external: "External",
 };
 const TYPE_COLOR: Record<PageType, string> = {
   hosted: "bg-blue-100 text-blue-700",
+  quiz: "bg-purple-100 text-purple-700",
   external: "bg-orange-100 text-orange-700",
 };
 const MIGRATION_LABEL: Record<MigrationStatus, string> = {

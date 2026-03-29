@@ -102,6 +102,9 @@ export interface SubscribeRequest {
   utm_medium?: string;
   utm_campaign?: string;
   note?: string;
+  score?: number;
+  result_label?: string;
+  result_description?: string;
 }
 
 export interface ApiResponse<T = unknown> {
