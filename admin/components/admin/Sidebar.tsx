@@ -9,6 +9,7 @@ const navItems = [
   { href: "/admin/dashboard",     label: "Dashboard",     icon: "▦" },
   { href: "/admin/landing-pages", label: "Landing Pages", icon: "◫" },
   { href: "/admin/subscribers",   label: "Subscribers",   icon: "◑" },
+  { href: "/admin/sequences",     label: "系列郵件",      icon: "🔁" },
   { href: "/admin/broadcast",     label: "群發 Email",    icon: "📨" },
   { href: "/admin/email-logs",    label: "Email Logs",    icon: "✉" },
 ];
