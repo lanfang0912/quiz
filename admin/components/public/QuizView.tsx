@@ -8,6 +8,7 @@ type QuizSection = { title: string; items: string[] };
 type ScoreRange = { min: number; max: number; label: string; description: string };
 type QuizContent = {
   intro?: string;
+  quiz_type?: "score" | "type";
   sections: QuizSection[];
   scoring: ScoreRange[];
   practice?: string[];
@@ -30,8 +31,19 @@ export function QuizView({ page, theme }: Props) {
 
   const score = checked.size;
   const total = content.sections.reduce((acc, s) => acc + s.items.length, 0);
+  const isTypeBased = content.quiz_type === "type";
 
   function getResult(): ScoreRange {
+    if (isTypeBased) {
+      // 計算每個 section 勾了幾題，取最多的那型
+      const sectionCounts = content.sections.map((section, si) =>
+        section.items.filter((_, ii) => checked.has(`${si}-${ii}`)).length
+      );
+      const maxCount = Math.max(...sectionCounts);
+      // 如果都沒勾，預設第一型
+      const winIdx = maxCount === 0 ? 0 : sectionCounts.findIndex((c) => c === maxCount);
+      return content.scoring[winIdx] ?? content.scoring[content.scoring.length - 1];
+    }
     return (
       content.scoring.find((s) => score >= s.min && score <= s.max) ??
       content.scoring[content.scoring.length - 1]
@@ -163,7 +175,7 @@ export function QuizView({ page, theme }: Props) {
           {phase === "form" && (
             <div className="rounded-2xl p-7" style={{ background: "rgba(255,255,255,0.7)", backdropFilter: "blur(16px)", border: `1px solid ${theme.border}`, boxShadow: "0 8px 32px rgba(0,0,0,0.08)" }}>
               <p className="text-center mb-1" style={{ fontFamily: theme.headingFont, fontWeight: 700, fontSize: 18, color: theme.text }}>
-                你勾了 {score} 題
+                {isTypeBased ? "測驗完成！" : `你勾了 ${score} 題`}
               </p>
               <p className="text-center mb-6" style={{ fontSize: 13, color: theme.muted }}>
                 填入資料，馬上看你的診斷結果
@@ -213,11 +225,17 @@ export function QuizView({ page, theme }: Props) {
                 className="rounded-2xl p-7 text-center"
                 style={{ background: "rgba(255,255,255,0.7)", backdropFilter: "blur(16px)", border: `1px solid ${theme.border}` }}
               >
-                <div style={{ fontSize: 13, color: theme.muted, marginBottom: 8 }}>你的分數</div>
-                <div style={{ fontFamily: theme.headingFont, fontWeight: 900, fontSize: 48, color: theme.accent, lineHeight: 1 }}>
-                  {score}
+                <div style={{ fontSize: 13, color: theme.muted, marginBottom: 8 }}>
+                  {isTypeBased ? "你的類型" : "你的分數"}
                 </div>
-                <div style={{ fontSize: 12, color: theme.muted, marginBottom: 16 }}>/ {total} 題</div>
+                {!isTypeBased && (
+                  <>
+                    <div style={{ fontFamily: theme.headingFont, fontWeight: 900, fontSize: 48, color: theme.accent, lineHeight: 1 }}>
+                      {score}
+                    </div>
+                    <div style={{ fontSize: 12, color: theme.muted, marginBottom: 16 }}>/ {total} 題</div>
+                  </>
+                )}
                 <div style={{ fontFamily: theme.headingFont, fontWeight: 700, fontSize: 18, color: theme.text, marginBottom: 8 }}>
                   {result.label}
                 </div>
