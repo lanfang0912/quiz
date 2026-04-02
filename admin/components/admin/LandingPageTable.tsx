@@ -135,8 +135,10 @@ export function LandingPageTable({ initialPages }: { initialPages: LandingPage[]
               return (
                 <tr key={page.id} className="border-b border-gray-100 last:border-0 hover:bg-gray-50">
                   <td className="px-4 py-3">
-                    <div className="font-medium text-gray-900">{page.name}</div>
-                    <div className="text-gray-400 text-xs mt-0.5">{page.slug}</div>
+                    <Link href={`/admin/landing-pages/${page.id}/edit`} className="block hover:underline">
+                      <div className="font-medium text-gray-900">{page.name}</div>
+                      <div className="text-gray-400 text-xs mt-0.5">{page.slug}</div>
+                    </Link>
                   </td>
                   <td className="px-4 py-3">
                     <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${TYPE_COLOR[page.page_type]}`}>

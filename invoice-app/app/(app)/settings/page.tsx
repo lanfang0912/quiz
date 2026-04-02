@@ -7,12 +7,13 @@ export default async function SettingsPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const { data: profile } = await supabase
+  const { data: profile, error: profileError } = await supabase
     .from('users')
-    .select('*, companies(*)')
+    .select('*, companies!fk_users_company(*)')
     .eq('id', user.id)
     .single()
 
+  if (profileError) throw new Error(`載入設定失敗: ${profileError.message} (code: ${profileError.code})`)
   if (!profile) redirect('/login')
 
   const { data: accountants } = await supabase
