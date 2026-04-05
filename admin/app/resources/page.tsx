@@ -18,9 +18,10 @@ export default async function ResourcesPage() {
       {/* Header */}
       <div className="bg-white border-b border-stone-100">
         <div className="max-w-3xl mx-auto px-6 py-12 text-center">
+          <p className="text-sm text-stone-400 mb-2">Erica Hsu 許藍方｜希塔療癒導師・關係靈氣療癒師</p>
           <h1 className="text-3xl font-bold text-stone-800 mb-3">免費資源</h1>
           <p className="text-stone-500 text-base leading-relaxed">
-            這裡收錄了我整理的紫微斗數學習資源。<br />
+            這裡收錄了我整理的學習資源。<br />
             找到你需要的，填上 email，我直接寄給你。
           </p>
         </div>
