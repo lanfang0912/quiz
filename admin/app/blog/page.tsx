@@ -18,6 +18,12 @@ export default async function BlogPage() {
           <p className="text-sm text-stone-400 mb-2">Erica Hsu 許藍方｜希塔療癒導師・關係靈氣療癒師</p>
           <h1 className="text-3xl font-bold text-stone-800 mb-3">悠藍．過生活</h1>
           <p className="text-stone-500 text-base">關係・療癒・自我成長</p>
+          <Link
+            href="/gifts"
+            className="inline-block mt-4 text-sm text-stone-500 hover:text-stone-800 underline underline-offset-4 transition-colors"
+          >
+            領取免費資源 →
+          </Link>
         </div>
       </div>
 
