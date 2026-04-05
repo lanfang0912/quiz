@@ -2,7 +2,7 @@ import Link from "next/link";
 import { getPublishedArticles } from "@/lib/db/articles";
 
 export const metadata = {
-  title: "文章 | Erica Hsu 許藍方",
+  title: "悠藍．過生活 | Erica Hsu 許藍方",
   description: "關係、療癒、自我成長。Erica 整理的文章，陪你慢慢看懂自己。",
 };
 
@@ -16,7 +16,7 @@ export default async function BlogPage() {
       <div className="bg-white border-b border-stone-100">
         <div className="max-w-3xl mx-auto px-6 py-12 text-center">
           <p className="text-sm text-stone-400 mb-2">Erica Hsu 許藍方｜希塔療癒導師・關係靈氣療癒師</p>
-          <h1 className="text-3xl font-bold text-stone-800 mb-3">文章</h1>
+          <h1 className="text-3xl font-bold text-stone-800 mb-3">悠藍．過生活</h1>
           <p className="text-stone-500 text-base">關係・療癒・自我成長</p>
         </div>
       </div>
