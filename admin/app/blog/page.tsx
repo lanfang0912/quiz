@@ -43,7 +43,7 @@ export default async function BlogPage() {
                   <img
                     src={article.cover_image}
                     alt={article.title}
-                    className="w-full h-48 object-cover"
+                    className="w-full object-contain bg-stone-50"
                   />
                 )}
                 <div className="flex items-start justify-between gap-4 px-6 py-5">
