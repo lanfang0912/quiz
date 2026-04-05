@@ -36,10 +36,17 @@ export default async function BlogPage() {
               <Link
                 key={article.id}
                 href={`/blog/${article.slug}`}
-                className="group block bg-white rounded-2xl border border-stone-100 px-6 py-5
+                className="group block bg-white rounded-2xl border border-stone-100 overflow-hidden
                            hover:border-stone-300 hover:shadow-sm transition-all duration-200"
               >
-                <div className="flex items-start justify-between gap-4">
+                {article.cover_image && (
+                  <img
+                    src={article.cover_image}
+                    alt={article.title}
+                    className="w-full h-48 object-cover"
+                  />
+                )}
+                <div className="flex items-start justify-between gap-4 px-6 py-5">
                   <div className="flex-1 min-w-0">
                     <h2 className="text-base font-semibold text-stone-800 group-hover:text-stone-900 mb-1 leading-snug">
                       {article.title}
