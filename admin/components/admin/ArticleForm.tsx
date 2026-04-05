@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { upload } from "@vercel/blob/client";
 
 interface Props {
   initial?: {
@@ -38,17 +39,26 @@ export function ArticleForm({ initial }: Props) {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  function getSafeName(file: File) {
+    const ext = file.name.match(/\.[a-zA-Z0-9]+$/)?.[0]?.toLowerCase() ?? "";
+    const base = file.name
+      .replace(/\.[a-zA-Z0-9]+$/, "")
+      .replace(/\s+/g, "-")
+      .replace(/[^a-zA-Z0-9\-]/g, "")
+      .toLowerCase() || "image";
+    return `articles/${Date.now()}-${base}${ext}`;
+  }
+
   async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
     setUploading(true);
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-      const res = await fetch("/api/admin/upload", { method: "POST", body: formData });
-      const data = await res.json().catch(() => ({ error: "圖片太大或格式不支援，請壓縮後再試" }));
-      if (!res.ok) throw new Error(data.error);
-      setCoverImage(data.url);
+      const blob = await upload(getSafeName(file), file, {
+        access: "public",
+        handleUploadUrl: "/api/admin/upload",
+      });
+      setCoverImage(blob.url);
     } catch (err) {
       setError(err instanceof Error ? err.message : "上傳失敗");
     } finally {
@@ -61,12 +71,11 @@ export function ArticleForm({ initial }: Props) {
     if (!file) return;
     setUploadingSummary(true);
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-      const res = await fetch("/api/admin/upload", { method: "POST", body: formData });
-      const data = await res.json().catch(() => ({ error: "圖片太大或格式不支援，請壓縮後再試" }));
-      if (!res.ok) throw new Error(data.error);
-      setSummaryImage(data.url);
+      const blob = await upload(getSafeName(file), file, {
+        access: "public",
+        handleUploadUrl: "/api/admin/upload",
+      });
+      setSummaryImage(blob.url);
     } catch (err) {
       setError(err instanceof Error ? err.message : "上傳失敗");
     } finally {
