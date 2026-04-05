@@ -3,6 +3,13 @@
   "buildCommand": "npm run build",
   "devCommand": "npm run dev",
   "installCommand": "npm install --legacy-peer-deps",
+  "rewrites": [
+    {
+      "source": "/",
+      "has": [{ "type": "host", "value": "gifts.urland.com.tw" }],
+      "destination": "/gifts"
+    }
+  ],
   "crons": [
     {
       "path": "/api/cron/sequence",
