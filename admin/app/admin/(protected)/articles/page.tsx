@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getArticles } from "@/lib/db/articles";
+import MigrateArticlesButton from "@/components/admin/MigrateArticlesButton";
 
 export const metadata = { title: "部落格文章 | 悠藍電子報管理系統" };
 export const dynamic = "force-dynamic";
@@ -14,13 +15,16 @@ export default async function ArticlesPage() {
           <h1 className="text-xl font-bold text-gray-900">部落格文章</h1>
           <p className="text-sm text-gray-500 mt-0.5">共 {articles.length} 篇</p>
         </div>
-        <Link
-          href="/admin/articles/new"
-          className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium
-                     px-4 py-2 rounded-lg transition-colors"
-        >
-          + 新增文章
-        </Link>
+        <div className="flex items-center gap-2">
+          <MigrateArticlesButton />
+          <Link
+            href="/admin/articles/new"
+            className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium
+                       px-4 py-2 rounded-lg transition-colors"
+          >
+            + 新增文章
+          </Link>
+        </div>
       </div>
 
       {articles.length === 0 ? (
