@@ -160,7 +160,7 @@ export function ArticleForm({ initial }: Props) {
           className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="article-slug"
         />
-        <p className="text-xs text-gray-400 mt-1">admin.urland.com.tw/blog/{slug || "..."}</p>
+        <p className="text-xs text-gray-400 mt-1">blog.urland.com.tw/{slug || "..."}</p>
       </div>
 
       <div>
