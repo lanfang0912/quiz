@@ -1,3 +1,4 @@
 admin/.next/
 admin/node_modules/
 .next/
+scripts/.env
