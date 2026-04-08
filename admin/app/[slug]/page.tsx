@@ -1,7 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import type { Metadata } from "next";
 import { getLandingPageBySlug } from "@/lib/db/landing-pages";
-import { getSubscriberCount } from "@/lib/db/subscribers";
 import { LandingPageView } from "@/components/public/LandingPageView";
 import { getTheme } from "@/lib/themes";
 import { QuizView } from "@/components/public/QuizView";
@@ -33,6 +32,5 @@ export default async function PublicPage({ params }: Props) {
     return <QuizView page={page} theme={theme} />;
   }
 
-  const subscriberCount = await getSubscriberCount(slug);
-  return <LandingPageView page={page} subscriberCount={subscriberCount} />;
+  return <LandingPageView page={page} />;
 }

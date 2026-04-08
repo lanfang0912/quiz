@@ -3,7 +3,7 @@ import { getTheme } from "@/lib/themes";
 import { HeroSection } from "./HeroSection";
 import { SubscribeForm } from "./SubscribeForm";
 
-export function LandingPageView({ page, subscriberCount }: { page: LandingPage; subscriberCount?: number }) {
+export function LandingPageView({ page }: { page: LandingPage }) {
   const theme = getTheme(page.theme);
 
   const needGoogleFonts =
@@ -40,7 +40,6 @@ export function LandingPageView({ page, subscriberCount }: { page: LandingPage; 
               subtitle={page.hero_subtitle ?? undefined}
               slug={page.slug}
               theme={theme}
-              subscriberCount={subscriberCount}
             />
 
             {page.cta && (
