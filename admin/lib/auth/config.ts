@@ -17,7 +17,11 @@ export const authOptions: NextAuthOptions = {
         const adminHash = process.env.ADMIN_PASSWORD_HASH;
 
         if (!adminEmail || !adminHash) return null;
-        if (credentials.email !== adminEmail) return null;
+        if (
+          credentials.email.trim().toLowerCase() !==
+          adminEmail.trim().toLowerCase()
+        )
+          return null;
 
         const valid = await bcrypt.compare(credentials.password, adminHash);
         if (!valid) return null;
